@@ -29,6 +29,16 @@
     <!--  因为是总项目 所以用dependencyManagement来管理  因为其他的子项目就不会来管理版本了了 可以直接引用 -->
     <dependencyManagement>
         <dependencies>
+
+            <!-- MySQL 驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <scope>runtime</scope>
+                <version>8.0.31</version>
+            </dependency>
+
+
             <!-- springcloud的依赖-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
