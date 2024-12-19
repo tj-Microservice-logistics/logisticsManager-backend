@@ -10,3 +10,12 @@ spring:
       config:
         server-addr: localhost:8848
         file-extension: yml
+  datasource:
+    url: jdbc:mysql://localhost:3306/logistics_order?useSSL=false
+    username: root
+    password: zyz20030130xr
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
