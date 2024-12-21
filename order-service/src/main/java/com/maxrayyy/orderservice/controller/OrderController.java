@@ -3,6 +3,7 @@ package com.maxrayyy.orderservice.controller;
 import com.maxrayyy.orderservice.dto.OrderDTO;
 import com.maxrayyy.orderservice.entity.Order;
 import com.maxrayyy.orderservice.service.OrderService;
+import com.maxrayyy.orderservice.dto.OrderWithGoodsDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
@@ -71,5 +72,11 @@ public class OrderController {
     public ResponseEntity<String> updatePrice(@RequestParam Long orderId, @RequestParam double newPrice) {
         orderService.updatePriceByOrderId(orderId, newPrice);
         return ResponseEntity.ok("Price updated for orderId: " + orderId);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<OrderWithGoodsDTO>> getAllOrders() {
+        List<OrderWithGoodsDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
 }

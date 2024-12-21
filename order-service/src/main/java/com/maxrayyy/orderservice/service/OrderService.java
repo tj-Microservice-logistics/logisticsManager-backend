@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.maxrayyy.orderservice.dto.OrderWithGoodsDTO;
 
 @Service
 public class OrderService {
@@ -93,5 +96,22 @@ public class OrderService {
             order.setPrice(newPrice);
             orderRepository.save(order);
         }
+    }
+
+    public List<OrderWithGoodsDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(order -> {
+            OrderWithGoodsDTO dto = new OrderWithGoodsDTO();
+            BeanUtils.copyProperties(order, dto);
+            
+            // 获取对应的商品信息
+            Goods goods = goodsRepository.findById(order.getGoodsId())
+                    .orElse(null);
+            if (goods != null) {
+                dto.setGoods(goods);
+            }
+            
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
