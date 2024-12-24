@@ -1,3 +1,7 @@
+create database reportDB;
+
+USE reportDB;
+
 create table order_raw_data
 (
     id                bigint auto_increment comment '主键ID'

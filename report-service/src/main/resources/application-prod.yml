@@ -16,9 +16,9 @@ spring:
       loadbalancer:
         enabled: true
   datasource:
-    url: jdbc:mysql://mysql:3306/logistics4report
+    url: jdbc:mysql://mysql:3306/reportDB
     username: root
-    password: hzd123
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
