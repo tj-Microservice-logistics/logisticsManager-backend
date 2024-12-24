@@ -8,6 +8,8 @@ import com.maxrayyy.commonmodule.entity.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/users") // 确保这是 /users
 public class UserController {
@@ -18,8 +20,13 @@ public class UserController {
     @PostMapping("/login") // 确保这是 /login
     public String login(@RequestBody LoginRequest request) {
         // 查找用户
-        Users user = usersRepository.findByUsername(request.getUsername());
-        if (user == null || !user.getPasswordHash().equals(request.getPassword())) {
+        Optional<Users> optionalUser = usersRepository.findByUsername(request.getUsername());
+
+        // 检查用户是否存在
+        Users user = optionalUser.orElseThrow(() -> new RuntimeException("用户名或密码错误"));
+
+        // 检查密码是否匹配
+        if (!user.getPasswordHash().equals(request.getPassword())) {
             throw new RuntimeException("用户名或密码错误");
         }
 
