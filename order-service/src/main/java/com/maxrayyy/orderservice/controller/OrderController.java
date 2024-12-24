@@ -50,28 +50,16 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/deliver-status/0")
-    public ResponseEntity<List<Order>> getOrdersWithDeliverStatusZero() {
-        List<Order> orders = orderService.getAndProcessOrdersWithDeliverStatusZero();
-        return ResponseEntity.ok(orders);
-    }
-
     @PostMapping("/update-deliver-status")
-    public ResponseEntity<String> updateDeliverStatus(@RequestParam Long goodsId) {
-        orderService.updateDeliverStatusByGoodsId(goodsId);
-        return ResponseEntity.ok("Deliver status updated for goodsId: " + goodsId);
+    public ResponseEntity<String> updateDeliverStatus(@RequestParam Long orderId) {
+        orderService.updateDeliverStatusByOrderId(orderId);
+        return ResponseEntity.ok("Deliver status updated for orderId: " + orderId);
     }
 
     @PostMapping("/update-payment-completed")
     public ResponseEntity<String> updatePaymentCompleted(@RequestParam Long orderId) {
         orderService.updatePaymentCompletedByOrderId(orderId);
         return ResponseEntity.ok("Payment completed status updated for orderId: " + orderId);
-    }
-
-    @PostMapping("/update-price")
-    public ResponseEntity<String> updatePrice(@RequestParam Long orderId, @RequestParam double newPrice) {
-        orderService.updatePriceByOrderId(orderId, newPrice);
-        return ResponseEntity.ok("Price updated for orderId: " + orderId);
     }
 
     @GetMapping("/list")
