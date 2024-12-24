@@ -29,7 +29,29 @@
     <!--  因为是总项目 所以用dependencyManagement来管理  因为其他的子项目就不会来管理版本了了 可以直接引用 -->
     <dependencyManagement>
         <dependencies>
-            <!-- springcloud的依赖-->
+
+            <!-- MySQL 驱动 -->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <scope>runtime</scope>
+                <version>9.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>8.0.0.Final</version> <!-- 适配 Jakarta EE 版本 -->
+            </dependency>
+
+            <!-- 这是必要的，如果使用 Jakarta Validator -->
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jakarta.el</artifactId>
+                <version>5.0.0</version>
+            </dependency>
+
+            <!-- spring cloud的依赖-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -57,5 +79,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 
 </project>
