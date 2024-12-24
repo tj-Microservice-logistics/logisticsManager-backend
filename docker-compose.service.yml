@@ -1,0 +1,67 @@
+version: '3'
+services:
+# gateway-service
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "9999:9999"
+    networks:
+      - hzd-network
+
+  # order-service
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "9080:9080"
+    networks:
+      - hzd-network
+
+  # storage-service
+  storage-service:
+    build:
+      context: ./storage-service
+      dockerfile: Dockerfile
+    container_name: storage-service
+    ports:
+      - "9081:9081"
+    networks:
+      - hzd-network
+
+  # transport-service
+  transport-service:
+    build:
+      context: ./transport-service
+      dockerfile: Dockerfile
+    container_name: transport-service
+    ports:
+      - "9082:9082"
+    networks:
+      - hzd-network
+
+  # user-service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "9083:9083"
+    networks:
+      - hzd-network
+
+  # report-service
+  report-service:
+    build:
+      context: ./report-service
+      dockerfile: Dockerfile
+    container_name: report-service
+    ports:
+      - "9084:9084"
+    networks:
+      - hzd-network
