@@ -6,40 +6,21 @@ import jakarta.persistence.*;
 @Table(name = "route_warehouses")
 public class RouteWarehouses {
 
-    public enum ArrivalStatus {
-        NOT_ARRIVED("未到达"),
-        ARRIVED("已到达");
-
-        private final String description;
-
-        ArrivalStatus(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "route_warhouses_id")
+    @Column(name = "route_warehouses_id")
     private Integer routeWarehousesId;
 
     @ManyToOne
-    @JoinColumn(name = "route_id")
+    @JoinColumn(name = "route_id", referencedColumnName = "route_id")
     private Route route;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", referencedColumnName = "warehouse_id")
     private Warehouse warehouse;
 
     @Column(name = "sequence")
     private Integer sequence;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "arrival_status")
-    private ArrivalStatus arrivalStatus;
 
     public Integer getRouteWarehousesId() {
         return routeWarehousesId;
@@ -73,14 +54,6 @@ public class RouteWarehouses {
         this.sequence = sequence;
     }
 
-    public ArrivalStatus getArrivalStatus() {
-        return arrivalStatus;
-    }
-
-    public void setArrivalStatus(ArrivalStatus arrivalStatus) {
-        this.arrivalStatus = arrivalStatus;
-    }
-
     @Override
     public String toString() {
         return "RouteWarehouses{" +
@@ -88,7 +61,6 @@ public class RouteWarehouses {
                 ", route=" + route +
                 ", warehouse=" + warehouse +
                 ", sequence=" + sequence +
-                ", arrivalStatus=" + arrivalStatus +
                 '}';
     }
 }

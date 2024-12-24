@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 public class Waybill {
 
     public enum TransportStatus {
+        WAITING("待发车"),
         IN_TRANSIT("运输中"),
         COMPLETED("已完成");
 
@@ -30,24 +31,59 @@ public class Waybill {
     private Integer waybillId;
 
     @ManyToOne
-    @JoinColumn(name = "route_id")
+    @JoinColumn(name = "route_id", referencedColumnName = "route_id")
     private Route route;
 
     @Column(name = "vehicle_plate_number")
     private String vehiclePlateNumber;
 
-    @Column(name = "driver_id")
-    private Integer driverId;
+    @Column(name = "driver_name")
+    private String driverName;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "transport_status")
-    private TransportStatus transportStatus;
+    private TransportStatus transportStatus = TransportStatus.WAITING;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "start", referencedColumnName = "warehouse_id")
+    private Warehouse start;
+
+    @ManyToOne
+    @JoinColumn(name = "end", referencedColumnName = "warehouse_id")
+    private Warehouse end;
+
+    @Column(name = "cargo_weight")
+    private Double cargoWeight;
+
+    public Double getCargoWeight() {
+        return cargoWeight;
+    }
+
+    public void setCargoWeight(Double cargoWeight) {
+        this.cargoWeight = cargoWeight;
+    }
+
+    public Warehouse getStart() {
+        return start;
+    }
+
+    public void setStart(Warehouse start) {
+        this.start = start;
+    }
+
+    public Warehouse getEnd() {
+        return end;
+    }
+
+    public void setEnd(Warehouse end) {
+        this.end = end;
+    }
 
     public Integer getWaybillId() {
         return waybillId;
@@ -71,14 +107,6 @@ public class Waybill {
 
     public void setVehiclePlateNumber(String vehiclePlateNumber) {
         this.vehiclePlateNumber = vehiclePlateNumber;
-    }
-
-    public Integer getDriverId() {
-        return driverId;
-    }
-
-    public void setDriverId(Integer driverId) {
-        this.driverId = driverId;
     }
 
     public TransportStatus getTransportStatus() {
@@ -105,16 +133,27 @@ public class Waybill {
         this.updatedAt = updatedAt;
     }
 
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
     @Override
     public String toString() {
         return "Waybill{" +
                 "waybillId=" + waybillId +
                 ", route=" + route +
                 ", vehiclePlateNumber='" + vehiclePlateNumber + '\'' +
-                ", driverId=" + driverId +
+                ", driverName='" + driverName + '\'' +
                 ", transportStatus=" + transportStatus +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", start=" + start +
+                ", end=" + end +
+                ", cargoWeight=" + cargoWeight +
                 '}';
     }
 }
