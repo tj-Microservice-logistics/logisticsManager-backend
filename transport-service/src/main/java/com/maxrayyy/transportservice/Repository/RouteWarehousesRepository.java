@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface RouteWarehousesRepository extends CrudRepository<RouteWarehouses, Integer> {
 
     Iterable<RouteWarehouses> findByRouteRouteId(Integer routeId);
+
 }
