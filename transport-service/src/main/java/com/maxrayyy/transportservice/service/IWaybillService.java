@@ -1,7 +1,7 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.Route;
-import com.maxrayyy.transportservice.Pojo.Waybill;
+import com.maxrayyy.transportservice.entity.Route;
+import com.maxrayyy.transportservice.entity.Waybill;
 
 import java.util.List;
 

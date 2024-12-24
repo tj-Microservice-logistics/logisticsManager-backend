@@ -1,6 +1,6 @@
-package com.maxrayyy.transportservice.Repository;
+package com.maxrayyy.transportservice.repository;
 
-import com.maxrayyy.transportservice.Pojo.Route;
+import com.maxrayyy.transportservice.entity.Route;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

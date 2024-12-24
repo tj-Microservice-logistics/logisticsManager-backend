@@ -1,7 +1,7 @@
 package com.maxrayyy.transportservice.controller;
 
-import com.maxrayyy.transportservice.Pojo.Warehouse;
-import com.maxrayyy.transportservice.Service.WarehouseService;
+import com.maxrayyy.transportservice.entity.Warehouse;
+import com.maxrayyy.transportservice.service.WarehouseService;
 import com.maxrayyy.transportservice.dto.ResponseMessage;
 import com.maxrayyy.transportservice.dto.WarehouseDto;
 import org.springframework.beans.factory.annotation.Autowired;

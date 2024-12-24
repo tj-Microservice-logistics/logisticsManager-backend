@@ -1,6 +1,6 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.RouteWarehouses;
+import com.maxrayyy.transportservice.entity.RouteWarehouses;
 import com.maxrayyy.transportservice.dto.RouteWarehousesDto;
 
 import java.util.List;
@@ -12,4 +12,7 @@ public interface IRouteWarehousesService {
 
     // 查询一个路径上的全部仓库
     List<RouteWarehouses> get(Integer routeId);
+
+    // 更新仓库的到达状态
+    List<RouteWarehouses> updateArrival(Integer warehouseId);
 }

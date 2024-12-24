@@ -1,9 +1,8 @@
 package com.maxrayyy.transportservice.controller;
 
-import com.maxrayyy.transportservice.Pojo.Waybill;
-import com.maxrayyy.transportservice.Service.WaybillService;
+import com.maxrayyy.transportservice.entity.Waybill;
+import com.maxrayyy.transportservice.service.WaybillService;
 import com.maxrayyy.transportservice.dto.ResponseMessage;
-import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,18 +1,20 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.Route;
-import com.maxrayyy.transportservice.Pojo.Warehouse;
-import com.maxrayyy.transportservice.Pojo.WarehouseDistance;
-import com.maxrayyy.transportservice.Pojo.Waybill;
-import com.maxrayyy.transportservice.Repository.RouteRepository;
-import com.maxrayyy.transportservice.Repository.WarehouseDistanceRepository;
-import com.maxrayyy.transportservice.Repository.WarehouseRepository;
-import com.maxrayyy.transportservice.Repository.WaybillRepository;
+import com.maxrayyy.transportservice.entity.Route;
+import com.maxrayyy.transportservice.entity.Warehouse;
+import com.maxrayyy.transportservice.entity.WarehouseDistance;
+import com.maxrayyy.transportservice.entity.Waybill;
+import com.maxrayyy.transportservice.repository.RouteRepository;
+import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
+import com.maxrayyy.transportservice.repository.WarehouseRepository;
+import com.maxrayyy.transportservice.repository.WaybillRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +63,14 @@ public class WaybillService implements IWaybillService {
             waybill.setRoute(route);
             waybill.setCargoWeight(route.getCargoWeight());
 
+            // 获取当前时间
+            LocalDateTime now = LocalDateTime.now();
+
+            // 格式转换为Timestamp
+            Timestamp timestamp = Timestamp.valueOf(now);
+
+            waybill.setCreatedAt(timestamp);
+
             waybillRepository.save(waybill);
         }
 
@@ -99,6 +109,14 @@ public class WaybillService implements IWaybillService {
         Waybill updatedWaybill = waybillRepository.findById(waybillId).orElseThrow(() -> new IllegalArgumentException("待更新订单不存在！"));
 
         BeanUtils.copyProperties(waybill, updatedWaybill, "waybillId");
+
+        // 获取当前时间
+        LocalDateTime now = LocalDateTime.now();
+
+        // 格式转换为Timestamp
+        Timestamp timestamp = Timestamp.valueOf(now);
+
+        updatedWaybill.setUpdatedAt(timestamp);
 
         return waybillRepository.save(updatedWaybill);
     }

@@ -1,7 +1,7 @@
 package com.maxrayyy.transportservice.controller;
 
-import com.maxrayyy.transportservice.Pojo.Route;
-import com.maxrayyy.transportservice.Service.IRouteService;
+import com.maxrayyy.transportservice.entity.Route;
+import com.maxrayyy.transportservice.service.IRouteService;
 import com.maxrayyy.transportservice.dto.ResponseMessage;
 import com.maxrayyy.transportservice.dto.RouteDto;
 import org.springframework.beans.factory.annotation.Autowired;
