@@ -1,28 +1,13 @@
-package com.maxrayyy.transportservice.Pojo;
+package com.maxrayyy.transportservice.dto;
 
-import jakarta.persistence.*;
+import java.security.Timestamp;
 
-@Entity
-@Table(name = "route")
-public class Route {
+public class RouteDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "route_id")
     private Integer routeId;
-
-    @ManyToOne
-    @JoinColumn(name = "start_warehouse", referencedColumnName = "warehouse_id")
-    private Warehouse startWarehouse;
-
-    @ManyToOne
-    @JoinColumn(name = "end_warehouse", referencedColumnName = "warehouse_id")
-    private Warehouse endWarehouse;
-
-    @Column(name = "total_cost")
+    private Integer startWarehouse;
+    private Integer endWarehouse;
     private Integer totalCost;
-
-    @Column(name = "cargo_weight")
     private Double cargoWeight;
 
     public Double getCargoWeight() {
@@ -41,19 +26,19 @@ public class Route {
         this.totalCost = totalCost;
     }
 
-    public Warehouse getStartWarehouse() {
+    public Integer getStartWarehouse() {
         return startWarehouse;
     }
 
-    public void setStartWarehouse(Warehouse startWarehouse) {
-        this.startWarehouse = startWarehouse;
-    }
-
-    public Warehouse getEndWarehouse() {
+    public Integer getEndWarehouse() {
         return endWarehouse;
     }
 
-    public void setEndWarehouse(Warehouse endWarehouse) {
+    public void setStartWarehouse(Integer startWarehouse) {
+        this.startWarehouse = startWarehouse;
+    }
+
+    public void setEndWarehouse(Integer endWarehouse) {
         this.endWarehouse = endWarehouse;
     }
 
@@ -67,7 +52,7 @@ public class Route {
 
     @Override
     public String toString() {
-        return "Route{" +
+        return "RouteDto{" +
                 "routeId=" + routeId +
                 ", startWarehouse=" + startWarehouse +
                 ", endWarehouse=" + endWarehouse +
