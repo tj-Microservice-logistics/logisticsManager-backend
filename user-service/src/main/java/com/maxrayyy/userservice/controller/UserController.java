@@ -1,63 +1,29 @@
 package com.maxrayyy.userservice.controller;
 
+import com.maxrayyy.userservice.dto.LoginRequest;
+import com.maxrayyy.userservice.repository.UsersRepository;
+import com.maxrayyy.userservice.model.Users;
 import com.maxrayyy.commonmodule.entity.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
-@RefreshScope
+@RequestMapping("/users") // 确保这是 /users
 public class UserController {
-    //application.yml配置文件中，设置token在redis中的过期时间
-    @Value("${config.redisTimeout}")
-    private Long redisTimeout;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private UsersRepository usersRepository;
 
-    @GetMapping(value = "/test")
-    public String test(){
-        return "this is user-service";
-    }
-
-    @GetMapping(value = "/login")
-    public String login(){
-        //验证账号密码
-        String userId = "123";
-        //jwt生成token
-        String token = JwtUtil.getToken(userId);
-        //将token存入redis
-        redisTemplate.opsForValue().set(token,userId,redisTimeout, TimeUnit.SECONDS);
-        //将token返回客户端
-        return token;
-    }
-
-    //熔断测试———超时
-    @GetMapping(value = "/test/timeout")
-    public String timeout (){
-
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    @PostMapping("/login") // 确保这是 /login
+    public String login(@RequestBody LoginRequest request) {
+        // 查找用户
+        Users user = usersRepository.findByUsername(request.getUsername());
+        if (user == null || !user.getPasswordHash().equals(request.getPassword())) {
+            throw new RuntimeException("用户名或密码错误");
         }
-        return "111";
+
+        // 返回 JWT Token
+        return JwtUtil.getToken(user.getUserId().toString());
     }
-
-    //熔断测试——异常
-    @GetMapping(value = "/test/exception")
-    public String exception (){
-
-        int i = 10/0;
-        return "111";
-    }
-
-
 }
