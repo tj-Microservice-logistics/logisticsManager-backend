@@ -19,14 +19,40 @@ import java.util.stream.Collectors;
 @RequestMapping("/drivers")
 public class DriverController {
 
-    @Autowired
-    private DriverRepository driverRepository;
+    private final DriverRepository driverRepository;
+    private final VehicleRepository vehicleRepository;
 
     @Autowired
-    private VehicleRepository vehicleRepository;
+    public DriverController(DriverRepository driverRepository, VehicleRepository vehicleRepository) {
+        this.driverRepository = driverRepository;
+        this.vehicleRepository = vehicleRepository;
+    }
 
     @Autowired
     private WarehouseRepository warehouseRepository;
+
+    /**
+     * 根据司机所属仓库查询未分配且空闲的车辆
+     * @param driverId 司机 ID
+     * @return 车辆列表
+     */
+    @GetMapping("/{driverId}/available-vehicles")
+    public ResponseEntity<List<Vehicle>> getAvailableVehiclesForDriver(@PathVariable Integer driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new RuntimeException("司机不存在"));
+
+        Integer warehouseId = driver.getWarehouse().getWarehouseId();
+        List<Vehicle> vehicles = vehicleRepository.findAvailableVehiclesByWarehouseId(warehouseId);
+
+        return ResponseEntity.ok(vehicles);
+    }
+
+
+    @GetMapping("/unassigned")
+    public ResponseEntity<List<Driver>> getUnassignedDrivers() {
+        List<Driver> drivers = driverRepository.findAllUnassignedDriversWithWarehouse();
+        return ResponseEntity.ok(drivers);
+    }
 
     // 获取所有司机
     @GetMapping
@@ -39,11 +65,11 @@ public class DriverController {
                     driverMap.put("driverId", driver.getDriverId());
                     driverMap.put("fullName", driver.getFullName());
                     driverMap.put("contactNumber", driver.getContactNumber());
-                    driverMap.put("isAvailable", driver.getIsAvailable());
+                    driverMap.put("available", driver.getIsAvailable());
                     driverMap.put("warehouseId", driver.getWarehouseId());
 
                     // 获取分配车辆信息
-                    List<Vehicle> assignedVehicles = vehicleRepository.findByAssignedTo(driver);
+                    List<Vehicle> assignedVehicles = vehicleRepository.findByAssignedToDriverId(driver.getDriverId());
                     List<String> vehicleLicensePlates = assignedVehicles.stream()
                             .map(Vehicle::getLicensePlate)
                             .collect(Collectors.toList());
@@ -73,18 +99,27 @@ public class DriverController {
     // 添加新司机
     @PostMapping
     public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
-        driver.setIsAvailable(true); // 新增司机时，默认可用
+        // 使用 warehouseId 查找 Warehouse
+        if (driver.getWarehouseId() != null) {
+            Warehouse warehouse = warehouseRepository.findById(driver.getWarehouseId())
+                    .orElseThrow(() -> new RuntimeException("仓库不存在"));
+            driver.setWarehouse(warehouse); // 设置关联的 Warehouse
+        }
+
+        driver.setIsAvailable(true); // 默认设置为可用
         return ResponseEntity.ok(driverRepository.save(driver));
     }
 
+
     // 更新司机信息
     @PutMapping("/{id}")
-    public ResponseEntity<Driver> updateDriver(@PathVariable Integer id, @RequestBody Driver driver) {
+    public ResponseEntity<Driver> updateDriver(@PathVariable Integer id, @RequestBody DriverDto driver) {
         return driverRepository.findById(id).map(existingDriver -> {
+
             existingDriver.setFullName(driver.getFullName());
             existingDriver.setContactNumber(driver.getContactNumber());
             existingDriver.setWarehouseId(driver.getWarehouseId());
-            existingDriver.setIsAvailable(driver.getIsAvailable());
+            existingDriver.setIsAvailable(driver.getAvailable());
 
             return ResponseEntity.ok(driverRepository.save(existingDriver));
         }).orElse(ResponseEntity.notFound().build());
@@ -110,7 +145,7 @@ public class DriverController {
 
         // 分配车辆给司机
         vehicle.setAssignedTo(driver); // 传递 Driver 对象
-        vehicle.setStatus("in_use");
+        vehicle.setStatus(true);
         driver.setIsAvailable(false);
 
         vehicleRepository.save(vehicle);
@@ -127,10 +162,10 @@ public class DriverController {
             Driver driver = driverRepository.findById(id).get();
 
             // 在删除司机前，确保其分配的车辆被处理（例如，取消分配）
-            List<Vehicle> assignedVehicles = vehicleRepository.findByAssignedTo(driver);
+            List<Vehicle> assignedVehicles = vehicleRepository.findByAssignedToDriverId(driver.getDriverId());
             for (Vehicle vehicle : assignedVehicles) {
                 vehicle.setAssignedTo(null);
-                vehicle.setStatus("available");
+                vehicle.setStatus(true);
                 vehicleRepository.save(vehicle);
             }
 
@@ -140,4 +175,5 @@ public class DriverController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }
