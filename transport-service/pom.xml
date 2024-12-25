@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>com.maxrayyy</groupId>
-    <artifactId>user-service</artifactId>
+    <artifactId>transport-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-service</name>
-    <description>user-service</description>
+    <name>transport-service</name>
+    <description>transport-service</description>
     <url/>
     <licenses>
         <license/>
@@ -118,6 +118,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.maxrayyy</groupId>
+            <artifactId>common-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

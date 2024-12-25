@@ -8,7 +8,7 @@ import com.maxrayyy.transportservice.repository.RouteRepository;
 import com.maxrayyy.transportservice.repository.RouteWarehousesRepository;
 import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
 import com.maxrayyy.transportservice.repository.WarehouseRepository;
-import com.maxrayyy.transportservice.dto.RouteDto;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,15 +37,15 @@ public class RouteService implements IRouteService {
     public Route add(RouteDto routeDto) {
 
         // step1：找到最短路径
-        List<Integer> shortestRoute = findShortestRoute(routeDto.getStartWarehouse(), routeDto.getEndWarehouse());
+        List<Integer> shortestRoute = findShortestRoute(routeDto.getStartWarehouseId(), routeDto.getEndWarehouseId());
 
         // step2：创建 Route 对象
         Route route = new Route();
         BeanUtils.copyProperties(routeDto, route);
 
-        Warehouse startWarehouse = warehouseRepository.findById(routeDto.getStartWarehouse())
+        Warehouse startWarehouse = warehouseRepository.findById(routeDto.getStartWarehouseId())
                 .orElseThrow(() -> new IllegalArgumentException("无法找到起点仓库！"));
-        Warehouse endWarehouse = warehouseRepository.findById(routeDto.getEndWarehouse())
+        Warehouse endWarehouse = warehouseRepository.findById(routeDto.getEndWarehouseId())
                 .orElseThrow(() -> new IllegalArgumentException("无法找到终点仓库！"));
 
         route.setStartWarehouse(startWarehouse);

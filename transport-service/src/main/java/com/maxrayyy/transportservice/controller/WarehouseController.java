@@ -2,8 +2,8 @@ package com.maxrayyy.transportservice.controller;
 
 import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.service.WarehouseService;
-import com.maxrayyy.transportservice.dto.ResponseMessage;
-import com.maxrayyy.transportservice.dto.WarehouseDto;
+import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
+import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

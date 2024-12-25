@@ -1,7 +1,7 @@
 package com.maxrayyy.transportservice.service;
 
 import com.maxrayyy.transportservice.entity.RouteWarehouses;
-import com.maxrayyy.transportservice.dto.RouteWarehousesDto;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteWarehousesDto;
 
 import java.util.List;
 

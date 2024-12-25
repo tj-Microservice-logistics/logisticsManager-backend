@@ -2,7 +2,7 @@ package com.maxrayyy.transportservice.service;
 
 import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.WarehouseDistance;
-import com.maxrayyy.transportservice.dto.RouteDto;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
 
 import java.util.List;
 import java.util.Map;

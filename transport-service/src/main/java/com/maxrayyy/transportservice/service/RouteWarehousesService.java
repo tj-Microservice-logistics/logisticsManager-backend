@@ -3,7 +3,7 @@ package com.maxrayyy.transportservice.service;
 import com.maxrayyy.transportservice.entity.RouteWarehouses;
 import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.repository.RouteWarehousesRepository;
-import com.maxrayyy.transportservice.dto.RouteWarehousesDto;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteWarehousesDto;
 import com.maxrayyy.transportservice.repository.WarehouseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

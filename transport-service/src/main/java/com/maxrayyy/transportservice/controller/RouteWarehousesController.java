@@ -2,8 +2,8 @@ package com.maxrayyy.transportservice.controller;
 
 import com.maxrayyy.transportservice.entity.RouteWarehouses;
 import com.maxrayyy.transportservice.service.RouteWarehousesService;
-import com.maxrayyy.transportservice.dto.ResponseMessage;
-import com.maxrayyy.transportservice.dto.RouteWarehousesDto;
+import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteWarehousesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
