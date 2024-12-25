@@ -62,12 +62,12 @@
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
 
-        <!-- 公共模块 -->
-<!--        <dependency>-->
-<!--            <groupId>com.maxrayyy</groupId>-->
-<!--            <artifactId>common-module</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
+<!--         公共模块-->
+        <dependency>
+            <groupId>com.maxrayyy</groupId>
+            <artifactId>common-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <!-- openfeign-->
         <dependency>
@@ -166,7 +166,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- RabbitMQ -->
+<!--         RabbitMQ -->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-amqp</artifactId>-->
@@ -215,7 +215,6 @@
 <!--                </configuration>-->
 <!--            </plugin>-->
         </plugins>
-
     </build>
 
 </project>

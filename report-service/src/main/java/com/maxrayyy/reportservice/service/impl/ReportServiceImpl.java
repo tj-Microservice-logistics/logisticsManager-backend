@@ -1,6 +1,7 @@
 package com.maxrayyy.reportservice.service.impl;
 
-import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
+//import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
+import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsDataDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsResponseDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsSummaryDto;
@@ -124,13 +125,13 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public void saveObtainedOrder(ObtainedOrderDto obtainedOrder) {
+    public void saveObtainedOrder(ObtainedOrderDto obtainedOrderDto) {
         OrderRawData orderRawData = new OrderRawData();
-        orderRawData.setOrderId(obtainedOrder.getOrderId());
-        orderRawData.setOrderStatus(obtainedOrder.getOrderStatus());
-        orderRawData.setAmount(obtainedOrder.getAmount());
-        orderRawData.setOrderCreateTime(obtainedOrder.getOrderCreateTime());
-        orderRawData.setOrderUpdateTime(obtainedOrder.getOrderUpdateTime());
+        orderRawData.setOrderId(obtainedOrderDto.getOrderId());
+        orderRawData.setOrderStatus(obtainedOrderDto.getOrderStatus());
+        orderRawData.setAmount(obtainedOrderDto.getAmount());
+        orderRawData.setOrderCreateTime(obtainedOrderDto.getOrderCreateTime());
+        orderRawData.setOrderUpdateTime(obtainedOrderDto.getOrderUpdateTime());
         orderRawDataRepository.save(orderRawData);
     }
 

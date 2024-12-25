@@ -1,7 +1,7 @@
 package com.maxrayyy.reportservice.controller;
 
-import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
-import com.maxrayyy.reportservice.model.entity.OrderRawData;
+//import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
+import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.service.ReportService;
 import com.maxrayyy.reportservice.model.dto.StatisticsResponseDto;
 import jakarta.validation.constraints.Max;
@@ -45,8 +45,8 @@ public class ReportController {
     }
 
     @PostMapping("/order/raw")
-    public ResponseEntity<Void> saveOrderRawData(@RequestBody ObtainedOrderDto obtainedOrder) {
-        reportService.saveObtainedOrder(obtainedOrder);
+    public ResponseEntity<Void> saveOrderRawData(@RequestBody ObtainedOrderDto obtainedOrderDto) {
+        reportService.saveObtainedOrder(obtainedOrderDto);
         return ResponseEntity.ok().build();
     }
 }

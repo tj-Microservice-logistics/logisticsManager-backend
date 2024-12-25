@@ -1,4 +1,4 @@
-package com.maxrayyy.commonmodule.entity.util;
+package com.maxrayyy.commonmodule.util;
 
 
 import com.auth0.jwt.JWT;
