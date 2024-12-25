@@ -76,15 +76,23 @@
             <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
         </dependency>
 
+        <!-- 测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- WebFlux 测试支持 -->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>io.projectreactor</groupId>-->
-<!--            <artifactId>reactor-test</artifactId>-->
+<!--            <artifactId>spring-boot-starter-webflux</artifactId>-->
 <!--            <scope>test</scope>-->
 <!--        </dependency>-->
     </dependencies>
@@ -101,9 +109,6 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                        <!--                        <configuration>-->
-                        <!--                            <classifier>exec</classifier>-->
-                        <!--                        </configuration>-->
                     </execution>
                 </executions>
             </plugin>

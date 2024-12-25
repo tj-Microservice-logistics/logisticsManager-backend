@@ -21,8 +21,12 @@ public class Driver {
     @Column(nullable = false, unique = true)
     private String contactNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="is_available")
     private Boolean isAvailable;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_vehicle_id")
+    private Vehicle assignedVehicle; // 关联车辆
 
     // 多对一关系，避免序列化时无限递归
     @ManyToOne(fetch = FetchType.LAZY)
