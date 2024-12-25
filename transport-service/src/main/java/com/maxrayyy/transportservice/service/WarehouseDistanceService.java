@@ -1,17 +1,12 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.Warehouse;
-import com.maxrayyy.transportservice.Pojo.WarehouseDistance;
-import com.maxrayyy.transportservice.Repository.WarehouseDistanceRepository;
+import com.maxrayyy.transportservice.entity.Warehouse;
+import com.maxrayyy.transportservice.entity.WarehouseDistance;
+import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
 import com.maxrayyy.transportservice.dto.WarehouseDistanceDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class WarehouseDistanceService implements IWarehouseDistanceService {

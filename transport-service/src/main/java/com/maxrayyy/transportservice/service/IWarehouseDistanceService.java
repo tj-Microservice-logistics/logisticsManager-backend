@@ -1,10 +1,7 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.WarehouseDistance;
+import com.maxrayyy.transportservice.entity.WarehouseDistance;
 import com.maxrayyy.transportservice.dto.WarehouseDistanceDto;
-
-import java.util.List;
-import java.util.Map;
 
 public interface IWarehouseDistanceService {
 

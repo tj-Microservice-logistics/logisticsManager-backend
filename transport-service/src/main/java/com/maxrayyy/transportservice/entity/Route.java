@@ -1,7 +1,11 @@
-package com.maxrayyy.transportservice.Pojo;
+package com.maxrayyy.transportservice.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "route")
 public class Route {
@@ -19,51 +23,14 @@ public class Route {
     @JoinColumn(name = "end_warehouse", referencedColumnName = "warehouse_id")
     private Warehouse endWarehouse;
 
+    @Column(name = "order_id")
+    private Integer orderId;
+
     @Column(name = "total_cost")
     private Integer totalCost;
 
     @Column(name = "cargo_weight")
     private Double cargoWeight;
-
-    public Double getCargoWeight() {
-        return cargoWeight;
-    }
-
-    public void setCargoWeight(Double cargoWeight) {
-        this.cargoWeight = cargoWeight;
-    }
-
-    public Integer getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(Integer totalCost) {
-        this.totalCost = totalCost;
-    }
-
-    public Warehouse getStartWarehouse() {
-        return startWarehouse;
-    }
-
-    public void setStartWarehouse(Warehouse startWarehouse) {
-        this.startWarehouse = startWarehouse;
-    }
-
-    public Warehouse getEndWarehouse() {
-        return endWarehouse;
-    }
-
-    public void setEndWarehouse(Warehouse endWarehouse) {
-        this.endWarehouse = endWarehouse;
-    }
-
-    public Integer getRouteId() {
-        return routeId;
-    }
-
-    public void setRouteId(Integer routeId) {
-        this.routeId = routeId;
-    }
 
     @Override
     public String toString() {
@@ -71,6 +38,7 @@ public class Route {
                 "routeId=" + routeId +
                 ", startWarehouse=" + startWarehouse +
                 ", endWarehouse=" + endWarehouse +
+                ", orderId=" + orderId +
                 ", totalCost=" + totalCost +
                 ", cargoWeight=" + cargoWeight +
                 '}';

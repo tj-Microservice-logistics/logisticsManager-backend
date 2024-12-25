@@ -1,13 +1,13 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.Route;
-import com.maxrayyy.transportservice.Pojo.RouteWarehouses;
-import com.maxrayyy.transportservice.Pojo.Warehouse;
-import com.maxrayyy.transportservice.Pojo.WarehouseDistance;
-import com.maxrayyy.transportservice.Repository.RouteRepository;
-import com.maxrayyy.transportservice.Repository.RouteWarehousesRepository;
-import com.maxrayyy.transportservice.Repository.WarehouseDistanceRepository;
-import com.maxrayyy.transportservice.Repository.WarehouseRepository;
+import com.maxrayyy.transportservice.entity.Route;
+import com.maxrayyy.transportservice.entity.RouteWarehouses;
+import com.maxrayyy.transportservice.entity.Warehouse;
+import com.maxrayyy.transportservice.entity.WarehouseDistance;
+import com.maxrayyy.transportservice.repository.RouteRepository;
+import com.maxrayyy.transportservice.repository.RouteWarehousesRepository;
+import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
+import com.maxrayyy.transportservice.repository.WarehouseRepository;
 import com.maxrayyy.transportservice.dto.RouteDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +58,6 @@ public class RouteService implements IRouteService {
 
         // step4：创建 Waybills 并保存
         waybillService.generateWaybills(shortestRoute, route);
-
-
 
         return route;
 

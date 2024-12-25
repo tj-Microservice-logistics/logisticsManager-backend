@@ -1,7 +1,11 @@
-package com.maxrayyy.transportservice.Pojo;
+package com.maxrayyy.transportservice.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "route_warehouses")
 public class RouteWarehouses {
@@ -22,37 +26,8 @@ public class RouteWarehouses {
     @Column(name = "sequence")
     private Integer sequence;
 
-    public Integer getRouteWarehousesId() {
-        return routeWarehousesId;
-    }
-
-    public void setRouteWarehousesId(Integer routeWarehousesId) {
-        this.routeWarehousesId = routeWarehousesId;
-    }
-
-    public Route getRoute() {
-        return route;
-    }
-
-    public void setRoute(Route route) {
-        this.route = route;
-    }
-
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
-
-    public Integer getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
-    }
+    @Column(name = "arrival")
+    private boolean arrival = false;
 
     @Override
     public String toString() {
@@ -61,6 +36,7 @@ public class RouteWarehouses {
                 ", route=" + route +
                 ", warehouse=" + warehouse +
                 ", sequence=" + sequence +
+                ", arrival=" + arrival +
                 '}';
     }
 }

@@ -1,7 +1,11 @@
 package com.maxrayyy.transportservice.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+@Setter
+@Getter
 public class ResponseMessage<T> {
     private Integer code;
     private String message;
@@ -15,30 +19,6 @@ public class ResponseMessage<T> {
 
     public static <T> ResponseMessage<T> success(T data) {
         return new ResponseMessage<>(HttpStatus.OK.value(), "success!", data);
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
     }
 }
 

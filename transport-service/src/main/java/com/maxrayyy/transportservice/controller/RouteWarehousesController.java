@@ -1,7 +1,7 @@
 package com.maxrayyy.transportservice.controller;
 
-import com.maxrayyy.transportservice.Pojo.RouteWarehouses;
-import com.maxrayyy.transportservice.Service.RouteWarehousesService;
+import com.maxrayyy.transportservice.entity.RouteWarehouses;
+import com.maxrayyy.transportservice.service.RouteWarehousesService;
 import com.maxrayyy.transportservice.dto.ResponseMessage;
 import com.maxrayyy.transportservice.dto.RouteWarehousesDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,13 @@ public class RouteWarehousesController {
     public ResponseMessage<List<RouteWarehouses>> get(@PathVariable Integer routeId) {
         List<RouteWarehouses> routeWarehousesList = routeWarehousesService.get(routeId);
         return ResponseMessage.success(routeWarehousesList);
+    }
+
+    // 更新
+    @PutMapping("/arrival/{warehouseId}")
+    public ResponseMessage<List<RouteWarehouses>> updateArrival(@PathVariable Integer warehouseId) {
+        List<RouteWarehouses> updatedRouteWarehousesList = routeWarehousesService.updateArrival(warehouseId);
+        return ResponseMessage.success(updatedRouteWarehousesList);
     }
 
 }

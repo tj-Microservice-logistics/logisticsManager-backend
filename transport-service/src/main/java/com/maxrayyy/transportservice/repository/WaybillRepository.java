@@ -1,7 +1,7 @@
-package com.maxrayyy.transportservice.Repository;
+package com.maxrayyy.transportservice.repository;
 
-import com.maxrayyy.transportservice.Pojo.Warehouse;
-import com.maxrayyy.transportservice.Pojo.Waybill;
+import com.maxrayyy.transportservice.entity.Warehouse;
+import com.maxrayyy.transportservice.entity.Waybill;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

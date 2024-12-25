@@ -1,6 +1,6 @@
-package com.maxrayyy.transportservice.Service;
+package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.Pojo.Warehouse;
+import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.dto.WarehouseDto;
 
 public interface IWarehouseService {
