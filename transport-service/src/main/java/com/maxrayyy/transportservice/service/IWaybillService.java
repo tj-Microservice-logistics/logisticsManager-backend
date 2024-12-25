@@ -1,5 +1,6 @@
 package com.maxrayyy.transportservice.service;
 
+import com.maxrayyy.commonmodule.dto.transportDto.WaybillDto;
 import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.Waybill;
 
@@ -11,11 +12,11 @@ public interface IWaybillService {
     void generateWaybills(List<Integer> routeWarehouseIds, Route route);
 
     // 查询全部运单
-    List<Waybill> getAllWaybills();
+    List<WaybillDto> getAllWaybills();
 
     // 根据起点仓库和终点仓库查询运单
-    List<Waybill> getRouteWaybills(Integer startId, Integer endId);
+    List<WaybillDto> getRouteWaybills(Integer startId, Integer endId);
 
     // 更新运单信息，分配司机车辆
-    Waybill updateWaybill(Integer waybillId, Waybill waybill);
+    WaybillDto updateWaybill(Integer waybillId, WaybillDto waybillDto);
 }

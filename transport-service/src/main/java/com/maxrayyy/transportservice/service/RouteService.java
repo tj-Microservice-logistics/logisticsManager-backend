@@ -1,5 +1,6 @@
 package com.maxrayyy.transportservice.service;
 
+import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDistanceDto;
 import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.RouteWarehouses;
 import com.maxrayyy.transportservice.entity.Warehouse;
@@ -8,7 +9,7 @@ import com.maxrayyy.transportservice.repository.RouteRepository;
 import com.maxrayyy.transportservice.repository.RouteWarehousesRepository;
 import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
 import com.maxrayyy.transportservice.repository.WarehouseRepository;
-import com.maxrayyy.transportservice.dto.RouteDto;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,20 +35,20 @@ public class RouteService implements IRouteService {
     private WaybillService waybillService;
 
     @Override
-    public Route add(RouteDto routeDto) {
+    public RouteDto add(RouteDto routeDto) {
 
         // step1：找到最短路径
-        List<Integer> shortestRoute = findShortestRoute(routeDto.getStartWarehouse(), routeDto.getEndWarehouse());
+        List<Integer> shortestRoute = findShortestRoute(routeDto.getStartWarehouseId(), routeDto.getEndWarehouseId());
 
         // step2：创建 Route 对象
         Route route = new Route();
-        BeanUtils.copyProperties(routeDto, route);
 
-        Warehouse startWarehouse = warehouseRepository.findById(routeDto.getStartWarehouse())
+        Warehouse startWarehouse = warehouseRepository.findById(routeDto.getStartWarehouseId())
                 .orElseThrow(() -> new IllegalArgumentException("无法找到起点仓库！"));
-        Warehouse endWarehouse = warehouseRepository.findById(routeDto.getEndWarehouse())
+        Warehouse endWarehouse = warehouseRepository.findById(routeDto.getEndWarehouseId())
                 .orElseThrow(() -> new IllegalArgumentException("无法找到终点仓库！"));
 
+        BeanUtils.copyProperties(routeDto, route);
         route.setStartWarehouse(startWarehouse);
         route.setEndWarehouse(endWarehouse);
 
@@ -59,23 +60,34 @@ public class RouteService implements IRouteService {
         // step4：创建 Waybills 并保存
         waybillService.generateWaybills(shortestRoute, route);
 
-        return route;
+        // step5：返回 RouteDto
+        RouteDto resultDto = new RouteDto();
+        BeanUtils.copyProperties(route, resultDto);
+        resultDto.setStartWarehouseId(startWarehouse.getWarehouseId());
+        resultDto.setEndWarehouseId(endWarehouse.getWarehouseId());
+
+        return resultDto;
 
     }
 
     @Override
-    public Map<Integer, List<WarehouseDistance>> buildGraph() {
+    public Map<Integer, List<WarehouseDistanceDto>> buildGraph() {
 
         Iterable<WarehouseDistance> distances = warehouseDistanceRepository.findAll();
-        Map<Integer, List<WarehouseDistance>> warehouseDistanceMap = new HashMap<>();
+        Map<Integer, List<WarehouseDistanceDto>> warehouseDistanceMap = new HashMap<>();
 
         for(WarehouseDistance distance : distances){
             int warehouse1Id = distance.getWarehouse1().getWarehouseId();
             int warehouse2Id = distance.getWarehouse2().getWarehouseId();
 
             // 将仓库和路径添加到图中，无向边，两个方向均添加
-            warehouseDistanceMap.computeIfAbsent(warehouse1Id, k -> new ArrayList<>()).add(distance);
-            warehouseDistanceMap.computeIfAbsent(warehouse2Id, k -> new ArrayList<>()).add(distance);
+            WarehouseDistanceDto distanceDto = new WarehouseDistanceDto();
+            BeanUtils.copyProperties(distance, distanceDto);
+            distanceDto.setWarehouse1Id(warehouse1Id);
+            distanceDto.setWarehouse2Id(warehouse2Id);
+
+            warehouseDistanceMap.computeIfAbsent(warehouse1Id, k -> new ArrayList<>()).add(distanceDto);
+            warehouseDistanceMap.computeIfAbsent(warehouse2Id, k -> new ArrayList<>()).add(distanceDto);
         }
 
         return warehouseDistanceMap;
@@ -85,7 +97,7 @@ public class RouteService implements IRouteService {
     @Override
     public List<Integer> findShortestRoute(Integer startWarehouseId, Integer endWarehouseId) {
 
-        Map<Integer, List<WarehouseDistance>> graph = buildGraph();
+        Map<Integer, List<WarehouseDistanceDto>> graph = buildGraph();
         Map<Integer, Double> distances = new HashMap<>();
         Map<Integer, Integer> previous = new HashMap<>();
         PriorityQueue<Integer> routeQueue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
@@ -103,10 +115,10 @@ public class RouteService implements IRouteService {
         while(!routeQueue.isEmpty()){
             int currentWarehouseId = routeQueue.poll();
 
-            for(WarehouseDistance neighbor : graph.get(currentWarehouseId)){
-                int neighborId = (neighbor.getWarehouse1().getWarehouseId() == currentWarehouseId)
-                        ? neighbor.getWarehouse2().getWarehouseId()
-                        : neighbor.getWarehouse1().getWarehouseId();
+            for(WarehouseDistanceDto neighbor : graph.get(currentWarehouseId)){
+                int neighborId = (neighbor.getWarehouse1Id() == currentWarehouseId)
+                        ? neighbor.getWarehouse2Id()
+                        : neighbor.getWarehouse1Id();
 
                 double newDistance = distances.get(currentWarehouseId) + neighbor.getDistance();
                 if(newDistance < distances.get(neighborId)){

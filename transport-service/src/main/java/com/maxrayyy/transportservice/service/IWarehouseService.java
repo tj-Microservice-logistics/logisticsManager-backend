@@ -1,8 +1,8 @@
 package com.maxrayyy.transportservice.service;
 
-import com.maxrayyy.transportservice.entity.Warehouse;
-import com.maxrayyy.transportservice.dto.WarehouseDto;
+import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDto;
 
 public interface IWarehouseService {
-    Warehouse add(WarehouseDto warehouseDto);
+    // 新增一个仓库
+    WarehouseDto add(WarehouseDto warehouseDto);
 }

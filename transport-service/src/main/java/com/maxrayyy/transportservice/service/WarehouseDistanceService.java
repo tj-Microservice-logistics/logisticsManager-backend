@@ -3,7 +3,7 @@ package com.maxrayyy.transportservice.service;
 import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.entity.WarehouseDistance;
 import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
-import com.maxrayyy.transportservice.dto.WarehouseDistanceDto;
+import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDistanceDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class WarehouseDistanceService implements IWarehouseDistanceService {
     WarehouseDistanceRepository warehouseDistanceRepository;
 
     @Override
-    public WarehouseDistance add(WarehouseDistanceDto warehouseDistanceDto) {
+    public WarehouseDistanceDto add(WarehouseDistanceDto warehouseDistanceDto) {
         WarehouseDistance warehouseDistance = new WarehouseDistance();
 
         Warehouse warehouse1 = warehouseDistance.getWarehouse1();
@@ -28,7 +28,9 @@ public class WarehouseDistanceService implements IWarehouseDistanceService {
 
         BeanUtils.copyProperties(warehouseDistanceDto,warehouseDistance);
 
-        return warehouseDistanceRepository.save(warehouseDistance);
+        warehouseDistanceRepository.save(warehouseDistance);
+
+        return warehouseDistanceDto;
     }
 
 }
