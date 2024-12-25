@@ -7,6 +7,7 @@ import com.maxrayyy.storageservice.repository.DriverRepository;
 import com.maxrayyy.storageservice.repository.VehicleRepository;
 import com.maxrayyy.storageservice.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +61,6 @@ public class DriverController {
         List<Map<String, Object>> driversWithWarehouse = driverRepository.findAll()
                 .stream()
                 .map(driver -> {
-                    // 创建一个Map，用于存储司机信息和仓库名称
                     Map<String, Object> driverMap = new HashMap<>();
                     driverMap.put("driverId", driver.getDriverId());
                     driverMap.put("fullName", driver.getFullName());
@@ -68,12 +68,11 @@ public class DriverController {
                     driverMap.put("available", driver.getIsAvailable());
                     driverMap.put("warehouseId", driver.getWarehouseId());
 
-                    // 获取分配车辆信息
-                    List<Vehicle> assignedVehicles = vehicleRepository.findByAssignedToDriverId(driver.getDriverId());
-                    List<String> vehicleLicensePlates = assignedVehicles.stream()
-                            .map(Vehicle::getLicensePlate)
-                            .collect(Collectors.toList());
-                    driverMap.put("assignedVehicles", vehicleLicensePlates);
+                    // 获取分配车辆信息（假设每个司机只能分配一辆车）
+                    Vehicle assignedVehicle = vehicleRepository.findByAssignedToDriverId(driver.getDriverId())
+                            .stream().findFirst().orElse(null);
+                    driverMap.put("assignedVehicleLicensePlate",
+                            assignedVehicle != null ? assignedVehicle.getLicensePlate() : null);
 
                     // 查询仓库名称
                     String warehouseName = warehouseRepository.findById(driver.getWarehouseId())
@@ -88,13 +87,28 @@ public class DriverController {
         return ResponseEntity.ok(driversWithWarehouse);
     }
 
+
     // 根据ID获取单个司机
     @GetMapping("/{id}")
-    public ResponseEntity<Driver> getDriverById(@PathVariable Integer id) {
-        return driverRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    public ResponseEntity<?> getDriverById(@PathVariable Integer id) {
+        return driverRepository.findById(id).map(existingDriver -> {
+            // 构造 DriverDto
+            DriverDto dto = new DriverDto();
+            dto.setDriverId(existingDriver.getDriverId());
+            dto.setFullName(existingDriver.getFullName());
+            dto.setContactNumber(existingDriver.getContactNumber());
+            dto.setAvailable(existingDriver.getIsAvailable());
+
+            // 判断是否有分配车辆
+            if (existingDriver.getAssignedVehicle() != null) {
+                dto.setAssignedVehicleId(existingDriver.getAssignedVehicle().getVehicleId());
+                dto.setAssignedVehicleLicensePlate(existingDriver.getAssignedVehicle().getLicensePlate());
+            }
+
+            // 返回构造的 DTO
+            return ResponseEntity.ok(dto);
+
+}).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DriverDto()));    }
 
     // 添加新司机
     @PostMapping
@@ -113,16 +127,71 @@ public class DriverController {
 
     // 更新司机信息
     @PutMapping("/{id}")
-    public ResponseEntity<Driver> updateDriver(@PathVariable Integer id, @RequestBody DriverDto driver) {
+    public ResponseEntity<?> updateDriver(@PathVariable Integer id, @RequestBody DriverDto driverDto) {
         return driverRepository.findById(id).map(existingDriver -> {
+            // 更新司机基本信息
+            existingDriver.setFullName(driverDto.getFullName());
+            existingDriver.setContactNumber(driverDto.getContactNumber());
+            existingDriver.setWarehouseId(driverDto.getWarehouseId());
+            existingDriver.setIsAvailable(driverDto.getAvailable());
 
-            existingDriver.setFullName(driver.getFullName());
-            existingDriver.setContactNumber(driver.getContactNumber());
-            existingDriver.setWarehouseId(driver.getWarehouseId());
-            existingDriver.setIsAvailable(driver.getAvailable());
+            // 更新车辆分配逻辑
+            if (driverDto.getAssignedVehicleId() != null) {
+                // 查找新分配的车辆
+                Vehicle newVehicle = vehicleRepository.findById(driverDto.getAssignedVehicleId())
+                        .orElseThrow(() -> new RuntimeException("车辆不存在"));
 
-            return ResponseEntity.ok(driverRepository.save(existingDriver));
+                // 如果司机之前已分配车辆，释放旧车辆
+                if (existingDriver.getAssignedVehicle() != null) {
+                    Vehicle oldVehicle = existingDriver.getAssignedVehicle();
+                    oldVehicle.setAssignedTo(null);
+                    oldVehicle.setStatus(true); // 标记旧车辆为可用
+                    vehicleRepository.save(oldVehicle);
+                }
+
+                // 绑定新车辆到司机
+                existingDriver.setAssignedVehicle(newVehicle);
+                newVehicle.setAssignedTo(existingDriver);
+                newVehicle.setStatus(false); // 标记新车辆为已分配
+                vehicleRepository.save(newVehicle);
+
+                // 设置司机为忙碌状态
+                existingDriver.setIsAvailable(false);
+            } else {
+                // 如果清空车辆分配，释放旧车辆
+                if (existingDriver.getAssignedVehicle() != null) {
+                    Vehicle oldVehicle = existingDriver.getAssignedVehicle();
+                    oldVehicle.setAssignedTo(null);
+                    oldVehicle.setStatus(true); // 标记旧车辆为可用
+                    vehicleRepository.save(oldVehicle);
+                }
+                existingDriver.setAssignedVehicle(null);
+            }
+
+            // 保存司机更新
+            driverRepository.save(existingDriver);
+
+            // 返回更新后的数据
+            DriverDto responseDto = createDriverDto(existingDriver);
+            return ResponseEntity.ok(responseDto);
         }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // 工具方法：创建 DriverDto
+    private DriverDto createDriverDto(Driver driver) {
+        DriverDto dto = new DriverDto();
+        dto.setDriverId(driver.getDriverId());
+        dto.setFullName(driver.getFullName());
+        dto.setContactNumber(driver.getContactNumber());
+        dto.setWarehouseId(driver.getWarehouseId());
+        dto.setAvailable(driver.getIsAvailable());
+
+        if (driver.getAssignedVehicle() != null) {
+            dto.setAssignedVehicleId(driver.getAssignedVehicle().getVehicleId());
+            dto.setAssignedVehicleLicensePlate(driver.getAssignedVehicle().getLicensePlate());
+        }
+
+        return dto;
     }
 
     // 分配车辆给司机

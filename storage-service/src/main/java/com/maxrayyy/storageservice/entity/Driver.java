@@ -1,14 +1,14 @@
 package com.maxrayyy.storageservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "drivers")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Driver {
 
     @Id
@@ -24,12 +24,15 @@ public class Driver {
     @Column(nullable = false,name="is_available")
     private Boolean isAvailable;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_vehicle_id")
-    private Vehicle assignedVehicle; // 关联车辆
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Vehicle assignedVehicle;
+
+
 
     // 多对一关系，避免序列化时无限递归
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "warehouse_id")
     @JsonBackReference
     private Warehouse warehouse;
