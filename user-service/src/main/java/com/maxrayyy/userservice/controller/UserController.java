@@ -3,7 +3,7 @@ package com.maxrayyy.userservice.controller;
 import com.maxrayyy.userservice.dto.LoginRequest;
 import com.maxrayyy.userservice.repository.UsersRepository;
 import com.maxrayyy.userservice.model.Users;
-import com.maxrayyy.commonmodule.entity.util.JwtUtil;
+import com.maxrayyy.commonmodule.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
