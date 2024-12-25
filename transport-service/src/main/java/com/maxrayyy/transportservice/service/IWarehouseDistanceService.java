@@ -1,7 +1,7 @@
 package com.maxrayyy.transportservice.service;
 
 import com.maxrayyy.transportservice.entity.WarehouseDistance;
-import com.maxrayyy.transportservice.dto.WarehouseDistanceDto;
+import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDistanceDto;
 
 public interface IWarehouseDistanceService {
 

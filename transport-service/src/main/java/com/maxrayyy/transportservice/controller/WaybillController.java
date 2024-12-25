@@ -2,7 +2,7 @@ package com.maxrayyy.transportservice.controller;
 
 import com.maxrayyy.transportservice.entity.Waybill;
 import com.maxrayyy.transportservice.service.WaybillService;
-import com.maxrayyy.transportservice.dto.ResponseMessage;
+import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

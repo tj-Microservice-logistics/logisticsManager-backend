@@ -18,15 +18,11 @@ public class Warehouse {
     @Column(name = "warehouse_name")
     private String warehouseName;
 
-    @Column(name = "location")
-    private String location;
-
     @Override
     public String toString() {
         return "Warehouse{" +
                 "warehouseId=" + warehouseId +
                 ", warehouseName='" + warehouseName + '\'' +
-                ", location='" + location + '\'' +
                 '}';
     }
 }
