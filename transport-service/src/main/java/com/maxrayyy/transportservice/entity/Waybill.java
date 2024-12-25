@@ -21,8 +21,8 @@ public class Waybill {
     @JoinColumn(name = "route_id", referencedColumnName = "route_id")
     private Route route;
 
-    @Column(name = "order_id")
-    private Integer orderId;
+    @Column(name = "order_number")
+    private String orderNumber;
 
     @Column(name = "vehicle_plate_number")
     private String vehiclePlateNumber;
@@ -55,7 +55,7 @@ public class Waybill {
         return "Waybill{" +
                 "waybillId=" + waybillId +
                 ", route=" + route +
-                ", orderId=" + orderId +
+                ", orderNumber=" + orderNumber +
                 ", vehiclePlateNumber='" + vehiclePlateNumber + '\'' +
                 ", driverName='" + driverName + '\'' +
                 ", transportStatus='" + transportStatus + '\'' +

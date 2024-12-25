@@ -1,4 +1,4 @@
-package com.maxrayyy.commonmodule.dto;
+package com.maxrayyy.commonmodule.dto.orderDto;
 
 import lombok.Data;
 

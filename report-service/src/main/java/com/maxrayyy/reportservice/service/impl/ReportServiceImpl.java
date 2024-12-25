@@ -1,7 +1,7 @@
 package com.maxrayyy.reportservice.service.impl;
 
 //import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
-import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
+import com.maxrayyy.commonmodule.dto.orderDto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsDataDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsResponseDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsSummaryDto;

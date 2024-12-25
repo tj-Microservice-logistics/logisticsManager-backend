@@ -10,20 +10,16 @@ spring:
       config:
         server-addr: localhost:8848
         file-extension: yml
-    openfeign:
-      client:
-        config:
-          default:
-            connectTimeout: 5000
-            readTimeout: 5000
   datasource:
-    url: jdbc:mysql://localhost:3306/logistics_order?useSSL=false
+    url: jdbc:mysql://localhost:3306/orderdb?serverTimezone=UTC
     username: root
-    password: zyz20030130xr
+    password: zztxjy620
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
 server:
-  port: 8080
+  address: 0.0.0.0

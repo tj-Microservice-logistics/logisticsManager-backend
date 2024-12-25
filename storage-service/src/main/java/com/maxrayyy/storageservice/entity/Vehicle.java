@@ -22,7 +22,7 @@ public class Vehicle {
     private String vehicleType; // e.g., truck, van, forklift, drone
 
     @Column(nullable = false)
-    private String status; // available, in_use, maintenance, out_of_service, idle
+    private Boolean status; // 车辆状态：true 表示可用，false 表示不可用
 
     // 与 Driver 实体建立多对一关系
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,8 +35,10 @@ public class Vehicle {
     @JsonBackReference
     private Warehouse warehouse; // 关联 Warehouse 实体
 
-    @Column(name = "warehouse_id", insertable = false, updatable = false)
-    private Integer warehouseId; // 外键，关联到 Warehouse
+    // 动态获取 warehouseId
+    public Integer getWarehouseId() {
+        return warehouse != null ? warehouse.getWarehouseId() : null;
+    }
 
     @Transient
     private String warehouseName; // 通过 Warehouse 实体获取的仓库名称

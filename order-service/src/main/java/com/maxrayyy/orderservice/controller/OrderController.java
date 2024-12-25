@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/order")
 @RefreshScope
@@ -53,13 +54,13 @@ public class OrderController {
     @PostMapping("/update-deliver-status")
     public ResponseEntity<String> updateDeliverStatus(@RequestParam Long orderId) {
         orderService.updateDeliverStatusByOrderId(orderId);
-        return ResponseEntity.ok("Deliver status updated for orderId: " + orderId);
+        return ResponseEntity.ok("Deliver status updated for orderNumber: " + orderId);
     }
 
     @PostMapping("/update-payment-completed")
     public ResponseEntity<String> updatePaymentCompleted(@RequestParam Long orderId) {
         orderService.updatePaymentCompletedByOrderId(orderId);
-        return ResponseEntity.ok("Payment completed status updated for orderId: " + orderId);
+        return ResponseEntity.ok("Payment completed status updated for orderNumber: " + orderId);
     }
 
     @GetMapping("/list")

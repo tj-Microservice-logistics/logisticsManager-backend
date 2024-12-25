@@ -8,11 +8,10 @@ import lombok.Data;
 public class RouteDto {
 
     private Integer routeId;
-    private Integer orderId;
-    private Integer startWarehouseId;
-    private Integer endWarehouseId;
+    private String orderNumber;
+    private String startWarehouseName;
+    private String endWarehouseName;
     private Integer totalCost;
     private Double cargoWeight;
-
 
 }

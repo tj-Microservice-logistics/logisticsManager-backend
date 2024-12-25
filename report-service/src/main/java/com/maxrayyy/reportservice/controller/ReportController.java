@@ -1,7 +1,7 @@
 package com.maxrayyy.reportservice.controller;
 
 //import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
-import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
+import com.maxrayyy.commonmodule.dto.orderDto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.service.ReportService;
 import com.maxrayyy.reportservice.model.dto.StatisticsResponseDto;
 import jakarta.validation.constraints.Max;

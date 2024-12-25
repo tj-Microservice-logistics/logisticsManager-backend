@@ -2,18 +2,24 @@
 
 package com.maxrayyy.orderservice.service;
 
+import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
+import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
 import com.maxrayyy.orderservice.dto.OrderDTO;
 import com.maxrayyy.orderservice.entity.Goods;
 import com.maxrayyy.orderservice.entity.Order;
+import com.maxrayyy.orderservice.feignClient.TransportServiceClient;
 import com.maxrayyy.orderservice.repository.GoodsRepository;
 import com.maxrayyy.orderservice.repository.OrderRepository;
+import feign.FeignException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +32,9 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final GoodsRepository goodsRepository;
+
+    @Autowired
+    TransportServiceClient transportServiceClient;
 
     public OrderService(OrderRepository orderRepository, GoodsRepository goodsRepository) {
         this.orderRepository = orderRepository;
@@ -46,7 +55,21 @@ public class OrderService {
         order.setDeliverStatus(0);
         order.setGenerationDate(LocalDate.now());
         order.setFinishDate(null);
-        order.setPrice(null);
+
+        // 调用transport-API规划订单路径
+        RouteDto routeDto = new RouteDto();
+        routeDto.setStartWarehouseName(order.getOriginPlace());
+        routeDto.setEndWarehouseName(order.getDestinationPlace());
+        routeDto.setOrderNumber(order.getOrderNumber());
+        routeDto.setCargoWeight(goods.getGoodsWeight());
+
+        try {
+            ResponseMessage<RouteDto> responseMessage = transportServiceClient.addRoute(routeDto);
+
+            order.setPrice(responseMessage.getData().getTotalCost());
+        } catch (FeignException e) {
+            logger.error("Error creating route in transport service: ", e);
+        }
 
         return orderRepository.save(order);
     }
@@ -90,7 +113,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void updatePriceByOrderId(Long orderId, double newPrice) {
+    public void updatePriceByOrderId(Long orderId, Integer newPrice) {
         Order order = orderRepository.findById(orderId).orElse(null);
         if (order != null) {
             order.setPrice(newPrice);
@@ -105,12 +128,8 @@ public class OrderService {
             BeanUtils.copyProperties(order, dto);
             
             // 获取对应的商品信息
-            Goods goods = goodsRepository.findById(order.getGoodsId())
-                    .orElse(null);
-            if (goods != null) {
-                dto.setGoods(goods);
-            }
-            
+            goodsRepository.findById(order.getGoodsId()).ifPresent(dto::setGoods);
+
             return dto;
         }).collect(Collectors.toList());
     }
