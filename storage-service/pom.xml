@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.maxrayyy</groupId>
-    <artifactId>user-service</artifactId>
+    <artifactId>storage-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>storage-service</name>
     <description>storage-service</description>
