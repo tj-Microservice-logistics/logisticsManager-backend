@@ -1,6 +1,5 @@
 package com.maxrayyy.transportservice.controller;
 
-import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.service.IRouteService;
 import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
 import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
@@ -19,8 +18,8 @@ public class RouteController {
 
     //增加
     @PostMapping
-    public ResponseMessage<Route> add(@RequestBody RouteDto route) {
-        Route routeNew = routeService.add(route);
+    public ResponseMessage<RouteDto> add(@RequestBody RouteDto route) {
+        RouteDto routeNew = routeService.add(route);
         return ResponseMessage.success(routeNew);
     }
 

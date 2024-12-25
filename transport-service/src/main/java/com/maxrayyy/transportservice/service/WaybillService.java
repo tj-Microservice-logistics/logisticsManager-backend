@@ -1,5 +1,6 @@
 package com.maxrayyy.transportservice.service;
 
+import com.maxrayyy.commonmodule.dto.transportDto.WaybillDto;
 import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.entity.WarehouseDistance;
@@ -56,7 +57,6 @@ public class WaybillService implements IWaybillService {
                     .findByWarehouse1AndWarehouse2(start, end)
                     .orElseThrow(() -> new IllegalArgumentException("未找到路径：" + start.getWarehouseName() + " -> " + end.getWarehouseName()));
 
-
             // 添加成本
             totalCost += distance.getCost();
 
@@ -77,38 +77,54 @@ public class WaybillService implements IWaybillService {
         route.setTotalCost(totalCost);
 
         routeRepository.save(route);
+
     }
 
     @Override
-    public List<Waybill> getAllWaybills() {
+    public List<WaybillDto> getAllWaybills() {
         Iterable<Waybill> waybills = waybillRepository.findAll();
 
-        List<Waybill> waybillList = new ArrayList<>();
-        waybills.forEach(waybillList::add);
+        List<WaybillDto> waybillDtoList = new ArrayList<>();
+        for (Waybill waybill : waybills) {
+            WaybillDto waybillDto = new WaybillDto();
+            BeanUtils.copyProperties(waybill, waybillDto);
+            waybillDto.setRouteId(waybill.getRoute().getRouteId());
+            waybillDto.setStartWarehouseId(waybill.getStart().getWarehouseId());
+            waybillDto.setEndWarehouseId(waybill.getEnd().getWarehouseId());
+            waybillDtoList.add(waybillDto);
+        }
 
-        return waybillList;
+        return waybillDtoList;
     }
 
     @Override
-    public List<Waybill> getRouteWaybills(Integer startId, Integer endId) {
+    public List<WaybillDto> getRouteWaybills(Integer startId, Integer endId) {
 
         Warehouse startWarehouse = warehouseRepository.findById(startId).orElse(null);
         Warehouse endWarehouse = warehouseRepository.findById(endId).orElse(null);
 
         Iterable<Waybill> routeWaybills = waybillRepository.findByStartAndEnd(startWarehouse, endWarehouse);
 
-        List<Waybill> routeWaybillList = new ArrayList<>();
-        routeWaybills.forEach(routeWaybillList::add);
+        List<WaybillDto> routeWaybillDtoList = new ArrayList<>();
+        for (Waybill waybill : routeWaybills) {
+            WaybillDto waybillDto = new WaybillDto();
+            BeanUtils.copyProperties(waybill, waybillDto);
+            waybillDto.setRouteId(waybill.getRoute().getRouteId());
+            waybillDto.setStartWarehouseId(waybill.getStart().getWarehouseId());
+            waybillDto.setEndWarehouseId(waybill.getEnd().getWarehouseId());
+            routeWaybillDtoList.add(waybillDto);
+        }
 
-        return routeWaybillList;
+        return routeWaybillDtoList;
     }
 
     @Override
     @Transactional
-    public Waybill updateWaybill(Integer waybillId, Waybill waybill) {
+    public WaybillDto updateWaybill(Integer waybillId, WaybillDto waybillDto) {
+
         Waybill updatedWaybill = waybillRepository.findById(waybillId).orElseThrow(() -> new IllegalArgumentException("待更新订单不存在！"));
 
-        BeanUtils.copyProperties(waybill, updatedWaybill, "waybillId");
+        BeanUtils.copyProperties(waybillDto, updatedWaybill, "waybillId", "createdAt", "orderId", "cargoWeight");
 
         // 获取当前时间
         LocalDateTime now = LocalDateTime.now();
@@ -118,6 +134,15 @@ public class WaybillService implements IWaybillService {
 
         updatedWaybill.setUpdatedAt(timestamp);
 
-        return waybillRepository.save(updatedWaybill);
+        // 保存更新后的实体
+        updatedWaybill = waybillRepository.save(updatedWaybill);
+
+        WaybillDto updatedWaybillDto = new WaybillDto();
+        BeanUtils.copyProperties(updatedWaybill, updatedWaybillDto);
+        updatedWaybillDto.setRouteId(updatedWaybill.getRoute().getRouteId());
+        updatedWaybillDto.setStartWarehouseId(updatedWaybill.getStart().getWarehouseId());
+        updatedWaybillDto.setEndWarehouseId(updatedWaybill.getEnd().getWarehouseId());
+
+        return updatedWaybillDto;
     }
 }

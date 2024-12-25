@@ -1,6 +1,5 @@
 package com.maxrayyy.transportservice.controller;
 
-import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.service.WarehouseService;
 import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
 import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDto;
@@ -19,8 +18,8 @@ public class WarehouseController {
 
     //增加
     @PostMapping
-    public ResponseMessage<Warehouse> add(@RequestBody WarehouseDto warehouse) {
-        Warehouse warehouseNew = warehouseService.add(warehouse);
+    public ResponseMessage<WarehouseDto> add(@RequestBody WarehouseDto warehouse) {
+        WarehouseDto warehouseNew = warehouseService.add(warehouse);
         return ResponseMessage.success(warehouseNew);
     }
 

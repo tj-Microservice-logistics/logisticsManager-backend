@@ -15,7 +15,7 @@ public class WarehouseDistanceService implements IWarehouseDistanceService {
     WarehouseDistanceRepository warehouseDistanceRepository;
 
     @Override
-    public WarehouseDistance add(WarehouseDistanceDto warehouseDistanceDto) {
+    public WarehouseDistanceDto add(WarehouseDistanceDto warehouseDistanceDto) {
         WarehouseDistance warehouseDistance = new WarehouseDistance();
 
         Warehouse warehouse1 = warehouseDistance.getWarehouse1();
@@ -28,7 +28,9 @@ public class WarehouseDistanceService implements IWarehouseDistanceService {
 
         BeanUtils.copyProperties(warehouseDistanceDto,warehouseDistance);
 
-        return warehouseDistanceRepository.save(warehouseDistance);
+        warehouseDistanceRepository.save(warehouseDistance);
+
+        return warehouseDistanceDto;
     }
 
 }

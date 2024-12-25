@@ -1,5 +1,6 @@
 package com.maxrayyy.transportservice.service;
 
+import com.maxrayyy.commonmodule.dto.transportDto.WarehouseDistanceDto;
 import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.WarehouseDistance;
 import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
@@ -10,10 +11,10 @@ import java.util.Map;
 public interface IRouteService {
 
     // 新增运输路径
-    Route add(RouteDto routeDto);
+    RouteDto add(RouteDto routeDto);
 
     // 根据仓库路径表生成图
-    Map<Integer, List<WarehouseDistance>> buildGraph();
+    Map<Integer, List<WarehouseDistanceDto>> buildGraph();
 
     // 计算最短路径
     List<Integer> findShortestRoute(Integer startWarehouseId, Integer endWarehouseId);

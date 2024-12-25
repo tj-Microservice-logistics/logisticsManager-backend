@@ -14,11 +14,12 @@ public class WarehouseService implements IWarehouseService {
     WarehouseRepository warehouseRepository;
 
     @Override
-    public Warehouse add(WarehouseDto warehouseDto) {
+    public WarehouseDto add(WarehouseDto warehouseDto) {
         Warehouse warehouse = new Warehouse();
-
         BeanUtils.copyProperties(warehouseDto, warehouse);
 
-        return warehouseRepository.save(warehouse);
+        warehouseRepository.save(warehouse);
+
+        return warehouseDto;
     }
 }

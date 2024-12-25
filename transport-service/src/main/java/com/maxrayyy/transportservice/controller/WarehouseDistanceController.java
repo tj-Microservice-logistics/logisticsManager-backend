@@ -17,10 +17,10 @@ public class WarehouseDistanceController {
     @Autowired
     WarehouseDistanceService warehouseDistanceService;
 
-    //增加
+    // 增加
     @PostMapping
-    public ResponseMessage<WarehouseDistance> add(@RequestBody WarehouseDistanceDto warehouseDistance) {
-        WarehouseDistance warehouseDistanceNew = warehouseDistanceService.add(warehouseDistance);
+    public ResponseMessage<WarehouseDistanceDto> add(@RequestBody WarehouseDistanceDto warehouseDistance) {
+        WarehouseDistanceDto warehouseDistanceNew = warehouseDistanceService.add(warehouseDistance);
         return ResponseMessage.success(warehouseDistanceNew);
     }
 }
