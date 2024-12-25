@@ -11,7 +11,6 @@ public class UserDto {
     @NotBlank(message = "Password cannot be empty")
     private String passwordHash;
 
-    private Users.Role role;
 
     // Getters 和 Setters
 }

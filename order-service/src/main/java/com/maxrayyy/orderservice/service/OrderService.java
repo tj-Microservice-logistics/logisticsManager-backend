@@ -114,4 +114,7 @@ public class OrderService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    public void updateDeliverStatusByOrderId(Long orderId) {
+    }
 }
