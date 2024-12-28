@@ -6,9 +6,11 @@ import com.maxrayyy.orderservice.service.OrderService;
 import com.maxrayyy.orderservice.dto.OrderWithGoodsDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -65,6 +67,14 @@ public class OrderController {
     @GetMapping("/list")
     public ResponseEntity<List<OrderWithGoodsDTO>> getAllOrders() {
         List<OrderWithGoodsDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/range")
+    public ResponseEntity<List<OrderWithGoodsDTO>> getOrdersByTimeRange(
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
+        List<OrderWithGoodsDTO> orders = orderService.getOrdersByTimeRange(startTime, endTime);
         return ResponseEntity.ok(orders);
     }
 }
