@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -116,5 +117,27 @@ public class OrderService {
     }
 
     public void updateDeliverStatusByOrderId(Long orderId) {
+    }
+
+    public List<OrderWithGoodsDTO> getOrdersByTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
+        // 转换 LocalDateTime 为 LocalDate
+        LocalDate startDate = startTime.toLocalDate();
+        LocalDate endDate = endTime.toLocalDate();
+        
+        List<Order> orders = orderRepository.findByGenerationDateBetween(startDate, endDate);
+        
+        return orders.stream().map(order -> {
+            OrderWithGoodsDTO dto = new OrderWithGoodsDTO();
+            BeanUtils.copyProperties(order, dto);
+            
+            // 获取对应的商品信息
+            Goods goods = goodsRepository.findById(order.getGoodsId())
+                    .orElse(null);
+            if (goods != null) {
+                dto.setGoods(goods);
+            }
+            
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
