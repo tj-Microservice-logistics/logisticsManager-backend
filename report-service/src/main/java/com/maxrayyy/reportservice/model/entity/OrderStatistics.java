@@ -20,4 +20,6 @@ public class OrderStatistics {
   private Integer totalOrders = 0;
 
   private BigDecimal totalAmount = BigDecimal.ZERO;
+
+
 }

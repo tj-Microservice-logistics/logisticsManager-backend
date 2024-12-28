@@ -1,11 +1,7 @@
 # 运行阶段
-FROM openjdk:17-jdk-slim
+FROM openjdk:17
 
 WORKDIR /app
-
-# 设置时区
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # 创建报表存放的目录
 RUN mkdir -p /app/files/reports

@@ -7,14 +7,26 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Repository
 public interface OrderRawDataRepository extends JpaRepository<OrderRawData, Long> {
     
-    // 查询指定时间范围的数据
-    @Query("SELECT o FROM OrderRawData o WHERE o.orderCreateTime >= :startDate AND o.orderCreateTime < :endDate " +
-           "ORDER BY o.orderCreateTime")
+    @Query("SELECT o FROM OrderRawData o WHERE o.orderCreateTime >= :startTime AND o.orderCreateTime < :endTime")
     List<OrderRawData> findByDateRange(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+        @Param("startTime") LocalDateTime startTime, 
+        @Param("endTime") LocalDateTime endTime
+    );
+
+    @Query("SELECT COUNT(o) FROM OrderRawData o WHERE o.orderCreateTime >= :startTime AND o.orderCreateTime < :endTime")
+    long countByDateRange(
+        @Param("startTime") LocalDateTime startTime, 
+        @Param("endTime") LocalDateTime endTime
+    );
+    
+    @Query("SELECT SUM(o.amount) FROM OrderRawData o WHERE o.orderCreateTime >= :startTime AND o.orderCreateTime < :endTime")
+    BigDecimal sumAmountByDateRange(
+        @Param("startTime") LocalDateTime startTime, 
+        @Param("endTime") LocalDateTime endTime
+    );
 }

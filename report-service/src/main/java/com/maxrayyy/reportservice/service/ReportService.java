@@ -3,8 +3,9 @@ package com.maxrayyy.reportservice.service;
 //import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
 import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsResponseDto;
-import com.maxrayyy.reportservice.model.message.OrderMessage;
 import org.springframework.http.ResponseEntity;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.IOException;
 
 public interface ReportService {
 
@@ -27,14 +28,9 @@ public interface ReportService {
      * 导出报表
      */
     ResponseEntity<byte[]> exportReport(int year, Integer month);
-    
-    /**
-     * 处理订单消息
-     */
-    void processOrderMessage(OrderMessage message);
 
     /**
-     * 保存订单原始数据
+     * 生成Excel报表
      */
-    void saveObtainedOrder(ObtainedOrderDto obtainedOrderDto);
+    XSSFWorkbook generateExcelReport(int year, Integer month) throws IOException;
 } 

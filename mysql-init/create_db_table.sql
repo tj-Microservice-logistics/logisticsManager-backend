@@ -1,4 +1,4 @@
-create database orderDB;
+create database IF NOT EXISTS orderDB;
 create database reportDB;
 create database transportDB;
 create database storageDB;
@@ -7,7 +7,7 @@ create database userDB;
 
 USE reportDB;
 
-create table order_raw_data
+create table IF NOT EXISTS order_raw_data
 (
     id                bigint auto_increment comment '主键ID'
         primary key,
@@ -30,7 +30,7 @@ create index idx_order_create_time
 create index idx_order_id
     on order_raw_data (order_id);
 
-create table order_statistics
+create table IF NOT EXISTS order_statistics
 (
     id           bigint auto_increment comment '主键ID'
         primary key,
@@ -46,7 +46,7 @@ create table order_statistics
 create index idx_granularity_period
     on order_statistics (granularity, stat_period);
 
-create table reports
+create table IF NOT EXISTS reports
 (
     id          bigint auto_increment
         primary key,

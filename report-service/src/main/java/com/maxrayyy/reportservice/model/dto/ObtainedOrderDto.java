@@ -1,6 +1,5 @@
 package com.maxrayyy.reportservice.model.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.math.BigDecimal;

@@ -1,14 +1,11 @@
 package com.maxrayyy.reportservice.service.impl;
 
-//import com.maxrayyy.reportservice.model.dto.ObtainedOrderDto;
-import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsDataDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsResponseDto;
 import com.maxrayyy.reportservice.model.dto.StatisticsSummaryDto;
 import com.maxrayyy.reportservice.model.entity.OrderStatistics;
 import com.maxrayyy.reportservice.model.entity.OrderRawData;
 import com.maxrayyy.reportservice.model.excel.OrderExportData;
-import com.maxrayyy.reportservice.model.message.OrderMessage;
 import com.maxrayyy.reportservice.repository.OrderStatisticsRepository;
 import com.maxrayyy.reportservice.repository.OrderRawDataRepository;
 import com.maxrayyy.reportservice.service.ReportService;
@@ -20,12 +17,20 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,70 +87,108 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ResponseEntity<byte[]> exportReport(int year, Integer month) {
-        LocalDateTime startDate, endDate;
+        try {
+            // 1. 获取数据
+            List<OrderStatistics> statistics;
+            String period;
+            String fileName;
+            
+            if (month != null) {
+                // 导出月度报表
+                period = String.format("%d-%02d", year, month);
+                statistics = statisticsRepository.getDailyStatsByMonth(period);
+                fileName = String.format("月度订单报表_%d年%02d月.xlsx", year, month);
+            } else {
+                // 导出年度报表
+                period = String.valueOf(year);
+                statistics = statisticsRepository.getDailyStatsByYear(period);
+                fileName = String.format("年度订单报表_%d年.xlsx", year);
+            }
+            
+            // 2. 生成Excel
+            XSSFWorkbook workbook = generateExcelReport(statistics, year, month);
+            
+            // 3. 转换为字节数组
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            byte[] excelBytes = outputStream.toByteArray();
+            
+            // 4. 设置响应头
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", URLEncoder.encode(fileName, "UTF-8"));
+            
+            return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+            
+        } catch (Exception e) {
+            log.error("Export report failed", e);
+            throw new RuntimeException("导出报表失败", e);
+        }
+    }
+    
+    @Override
+    public XSSFWorkbook generateExcelReport(int year, Integer month) throws IOException {
+        // 1. 获取数据
+        List<OrderStatistics> statistics;
+        String period;
         
         if (month != null) {
-            startDate = LocalDateTime.of(year, month, 1, 0, 0);
-            endDate = startDate.plusMonths(1);
+            period = String.format("%d-%02d", year, month);
+            statistics = statisticsRepository.getDailyStatsByMonth(period);
         } else {
-            startDate = LocalDateTime.of(year, 1, 1, 0, 0);
-            endDate = startDate.plusYears(1);
+            period = String.valueOf(year);
+            statistics = statisticsRepository.getDailyStatsByYear(period);
         }
         
-        List<OrderRawData> rawData = orderRawDataRepository.findByDateRange(startDate, endDate);
+        // 2. 生成Excel (使用之前的 generateExcelReport 方法)
+        return generateExcelReport(statistics, year, month);
+    }
+
+    private XSSFWorkbook generateExcelReport(List<OrderStatistics> statistics, int year, Integer month) throws IOException {
+        // 1. 读取模板
+        InputStream templateStream = getClass().getClassLoader().getResourceAsStream("templates/订单数据报模板.xlsx");
+        XSSFWorkbook workbook = new XSSFWorkbook(templateStream);
+        XSSFSheet sheet = workbook.getSheet("Sheet1");
         
-        if (rawData.isEmpty()) {
-            throw new RuntimeException("没有可导出的数据");
+        // 2. 填充报表标题 (BCDE合并单元格)
+        String reportTitle = month != null ? 
+            String.format("%d年%02d月订单报表", year, month) :
+            String.format("%d年订单报表", year);
+        // 获取合并的单元格并设置值
+        sheet.getRow(0).getCell(1).setCellValue(reportTitle);  // B1单元格
+        
+        // 3. 计算汇总数据
+        int totalOrders = statistics.stream().mapToInt(OrderStatistics::getTotalOrders).sum();
+        BigDecimal totalAmount = statistics.stream()
+            .map(OrderStatistics::getTotalAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        // 计算日均数据
+        double avgOrders = statistics.isEmpty() ? 0 : (double) totalOrders / statistics.size();
+        BigDecimal avgAmount = statistics.isEmpty() ? BigDecimal.ZERO : 
+            totalAmount.divide(BigDecimal.valueOf(statistics.size()), 2, RoundingMode.HALF_UP);
+        
+        // 4. 填充数据概览
+        sheet.getRow(3).getCell(2).setCellValue(totalOrders);      // C4单元格：总订单数
+        sheet.getRow(3).getCell(4).setCellValue(totalAmount.doubleValue());  // E4单元格：总金额
+        sheet.getRow(4).getCell(2).setCellValue(avgOrders);        // C5单元格：日均订单数
+        sheet.getRow(4).getCell(4).setCellValue(avgAmount.doubleValue());    // E5单元格：日均金额
+        
+        // 5. 填充数据明细
+        int rowNum = 7;  // 从第8行开始填充明细数据
+        for (OrderStatistics stat : statistics) {
+            XSSFRow row = sheet.getRow(rowNum++);
+            row.getCell(1).setCellValue(stat.getStatPeriod());     // B列：日期
+            row.getCell(2).setCellValue(stat.getTotalOrders());    // C列：订单数
+            row.getCell(3).setCellValue(stat.getTotalAmount().doubleValue());  // D列：金额
+            
+            // 计算并填充每单平均金额
+            double avgPerOrder = stat.getTotalOrders() == 0 ? 0 : 
+                stat.getTotalAmount().divide(BigDecimal.valueOf(stat.getTotalOrders()), 2, RoundingMode.HALF_UP).doubleValue();
+            row.getCell(4).setCellValue(avgPerOrder);              // E列：每单平均金额
         }
         
-        List<OrderExportData> exportData = ConvertUtil.toExportDataList(rawData);
-        
-        String fileName = String.format("report_%d_%s", 
-                year,
-                month != null ? String.format("%02d", month) : "all");
-
-        return ExcelUtil.generateExcel(exportData, OrderExportData.class, fileName);
-    }
-
-    @Override
-    @Transactional
-    public void processOrderMessage(OrderMessage message) {
-        LocalDateTime orderTime = message.getCreateTime();
-        
-        // 更新月统计
-        updateStatistics("MONTHLY", 
-                String.format("%d-%02d", orderTime.getYear(), orderTime.getMonthValue()), 
-                message);
-        
-        // 更新年统计
-        updateStatistics("YEARLY", 
-                String.valueOf(orderTime.getYear()), 
-                message);
-    }
-
-    @Override
-    @Transactional
-    public void saveObtainedOrder(ObtainedOrderDto obtainedOrderDto) {
-        OrderRawData orderRawData = new OrderRawData();
-        orderRawData.setOrderId(obtainedOrderDto.getOrderId());
-        orderRawData.setOrderStatus(obtainedOrderDto.getOrderStatus());
-        orderRawData.setAmount(obtainedOrderDto.getAmount());
-        orderRawData.setOrderCreateTime(obtainedOrderDto.getOrderCreateTime());
-        orderRawData.setOrderUpdateTime(obtainedOrderDto.getOrderUpdateTime());
-        orderRawDataRepository.save(orderRawData);
-    }
-
-    private void updateStatistics(String granularity, String statPeriod, OrderMessage message) {
-        OrderStatistics statistics = statisticsRepository
-                .findByStatPeriodAndGranularity(statPeriod, granularity)
-                .orElse(new OrderStatistics());
-        
-        statistics.setGranularity(granularity);
-        statistics.setStatPeriod(statPeriod);
-        statistics.setTotalOrders(statistics.getTotalOrders() + 1);
-        statistics.setTotalAmount(statistics.getTotalAmount().add(message.getAmount()));
-        
-        statisticsRepository.save(statistics);
+        return workbook;
     }
 
     private StatisticsResponseDto createResponse(List<StatisticsDataDto> data) {
@@ -193,15 +236,6 @@ public class ReportServiceImpl implements ReportService {
         
         response.setSummary(summary);
         return response;
-    }
-
-    private List<String> getQuarterMonths(int quarter) {
-        int startMonth = (quarter - 1) * 3 + 1;
-        return List.of(
-            String.format("%02d", startMonth),
-            String.format("%02d", startMonth + 1),
-            String.format("%02d", startMonth + 2)
-        );
     }
 
     private StatisticsDataDto convertToStatisticsData(OrderStatistics statistics) {

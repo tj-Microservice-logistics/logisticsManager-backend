@@ -64,3 +64,9 @@ spring:
 report:
   file:
     path: files/reports # 导出文件的存储路径
+
+task:
+  scheduling:
+    pool:
+      size: 5
+    thread-name-prefix: ReportTask-
