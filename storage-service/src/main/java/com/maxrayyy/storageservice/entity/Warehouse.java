@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,6 +16,7 @@ public class Warehouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "warehouse_id")
     private Integer warehouseId;
 
     @Column(nullable = false)
@@ -24,16 +24,5 @@ public class Warehouse {
 
     @Column(nullable = false)
     private Integer capacity;
-
-    // 一对多关系，防止序列化时无限递归
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Vehicle> vehicles;
-
-    // 一对多关系，避免序列化时无限递归
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Driver> drivers;
-
 
 }

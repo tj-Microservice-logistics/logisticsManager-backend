@@ -31,7 +31,7 @@ public class Waybill {
     private String driverName;
 
     @Column(name = "transport_status")
-    private String transportStatus = "待发车";
+    private String transportStatus = "待发车"; // 运输中、已到达
 
     @Column(name = "created_at")
     private Timestamp createdAt;

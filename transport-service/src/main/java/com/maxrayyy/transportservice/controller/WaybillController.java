@@ -1,7 +1,6 @@
 package com.maxrayyy.transportservice.controller;
 
 import com.maxrayyy.commonmodule.dto.transportDto.WaybillDto;
-import com.maxrayyy.transportservice.entity.Waybill;
 import com.maxrayyy.transportservice.service.WaybillService;
 import com.maxrayyy.commonmodule.dto.transportDto.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +16,14 @@ public class WaybillController {
     @Autowired
     WaybillService waybillService;
 
-    // 查询
+    // 查询所有运单
     @GetMapping("/allWaybills")
     public ResponseMessage<List<WaybillDto>> getAllWaybills(){
         List<WaybillDto> waybillList = waybillService.getAllWaybills();
         return ResponseMessage.success(waybillList);
     }
 
-    // 查询
+    // 根据起点和终点查询“待发车”运单
     @GetMapping("/waybillRoute")
     public ResponseMessage<List<WaybillDto>> getRouteWaybills(
             @RequestParam Integer startId,
@@ -33,7 +32,15 @@ public class WaybillController {
         return ResponseMessage.success(routeWaybillList);
     }
 
-    // 更新
+    // 根据车辆查询“运输中”运单
+    @GetMapping("/waybillVehicle")
+    public ResponseMessage<List<WaybillDto>> getVehicleWaybills(
+            @RequestParam String vehiclePlateNumber){
+        List<WaybillDto> vehicleWaybillList = waybillService.getVehicleWaybills(vehiclePlateNumber);
+        return ResponseMessage.success(vehicleWaybillList);
+    }
+
+    // 更新运单内容
     @PutMapping("/{waybillId}")
     public ResponseMessage<WaybillDto> updateWaybill(@PathVariable Integer waybillId, @RequestBody WaybillDto waybill) {
         WaybillDto updated = waybillService.updateWaybill(waybillId, waybill);

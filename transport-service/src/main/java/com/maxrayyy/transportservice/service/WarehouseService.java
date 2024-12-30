@@ -22,4 +22,15 @@ public class WarehouseService implements IWarehouseService {
 
         return warehouseDto;
     }
+
+    @Override
+    public WarehouseDto get(Integer warehouseId) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId).orElse(null);
+        if (warehouse == null) {
+            return null;
+        }
+        WarehouseDto warehouseDto = new WarehouseDto();
+        BeanUtils.copyProperties(warehouse, warehouseDto);
+        return warehouseDto;
+    }
 }

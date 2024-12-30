@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/routeWarehouses")
 public class RouteWarehousesController {
@@ -23,16 +24,17 @@ public class RouteWarehousesController {
     }
 
     // 查询
-    @GetMapping("/{routeId}")
-    public ResponseMessage<List<RouteWarehousesDto>> get(@PathVariable Integer routeId) {
-        List<RouteWarehousesDto> routeWarehousesList = routeWarehousesService.get(routeId);
+    @GetMapping("/{orderNumber}")
+    public ResponseMessage<List<RouteWarehousesDto>> get(@PathVariable String orderNumber) {
+        List<RouteWarehousesDto> routeWarehousesList = routeWarehousesService.get(orderNumber);
         return ResponseMessage.success(routeWarehousesList);
     }
 
     // 更新
-    @PutMapping("/arrival/{warehouseId}")
-    public ResponseMessage<List<RouteWarehousesDto>> updateArrival(@PathVariable Integer warehouseId) {
-        List<RouteWarehousesDto> updatedRouteWarehousesList = routeWarehousesService.updateArrival(warehouseId);
+    @PutMapping("/arrival")
+    public ResponseMessage<List<RouteWarehousesDto>> updateArrival(
+            @RequestParam String vehiclePlateNumber) {
+        List<RouteWarehousesDto> updatedRouteWarehousesList = routeWarehousesService.updateArrival(vehiclePlateNumber);
         return ResponseMessage.success(updatedRouteWarehousesList);
     }
 

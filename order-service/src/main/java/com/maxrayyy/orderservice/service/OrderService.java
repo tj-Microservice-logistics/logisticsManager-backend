@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -134,6 +133,13 @@ public class OrderService {
         }).collect(Collectors.toList());
     }
 
+    @Transactional
     public void updateDeliverStatusByOrderId(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.setDeliverStatus(order.getDeliverStatus() + 1);
+            order.setFinishDate(LocalDate.now());
+            orderRepository.save(order);
+        }
     }
 }

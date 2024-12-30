@@ -14,7 +14,7 @@ public class RouteController {
     @Autowired
     IRouteService routeService;
 
-    //增加
+    // 增加路径
     @PostMapping
     public ResponseMessage<RouteDto> add(@RequestBody RouteDto route) {
         RouteDto routeNew = routeService.add(route);

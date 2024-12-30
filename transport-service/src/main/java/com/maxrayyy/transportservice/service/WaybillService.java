@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WaybillService implements IWaybillService {
@@ -113,15 +114,36 @@ public class WaybillService implements IWaybillService {
 
         List<WaybillDto> routeWaybillDtoList = new ArrayList<>();
         for (Waybill waybill : routeWaybills) {
-            WaybillDto waybillDto = new WaybillDto();
-            BeanUtils.copyProperties(waybill, waybillDto);
-            waybillDto.setRouteId(waybill.getRoute().getRouteId());
-            waybillDto.setStartWarehouseName(waybill.getStart().getWarehouseName());
-            waybillDto.setEndWarehouseName(waybill.getEnd().getWarehouseName());
-            routeWaybillDtoList.add(waybillDto);
+            if(Objects.equals(waybill.getTransportStatus(), "待发车")) {
+                WaybillDto waybillDto = new WaybillDto();
+                BeanUtils.copyProperties(waybill, waybillDto);
+                waybillDto.setRouteId(waybill.getRoute().getRouteId());
+                waybillDto.setStartWarehouseName(waybill.getStart().getWarehouseName());
+                waybillDto.setEndWarehouseName(waybill.getEnd().getWarehouseName());
+                routeWaybillDtoList.add(waybillDto);
+            }
         }
 
         return routeWaybillDtoList;
+    }
+
+    @Override
+    public List<WaybillDto> getVehicleWaybills(String vehiclePlateNumber) {
+        Iterable<Waybill> vehicleWaybills = waybillRepository.findByVehiclePlateNumber(vehiclePlateNumber);
+
+        List<WaybillDto> vehicleWaybillDtoList = new ArrayList<>();
+        for (Waybill waybill : vehicleWaybills) {
+            if(Objects.equals(waybill.getTransportStatus(), "运输中")) {
+                WaybillDto waybillDto = new WaybillDto();
+                BeanUtils.copyProperties(waybill, waybillDto);
+                waybillDto.setRouteId(waybill.getRoute().getRouteId());
+                waybillDto.setStartWarehouseName(waybill.getStart().getWarehouseName());
+                waybillDto.setEndWarehouseName(waybill.getEnd().getWarehouseName());
+                vehicleWaybillDtoList.add(waybillDto);
+            }
+        }
+
+        return vehicleWaybillDtoList;
     }
 
     @Override

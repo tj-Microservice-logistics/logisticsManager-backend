@@ -7,9 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "warehouse_distance", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"warehouse_id_1", "warehouse_id_2"})
-})
+@Table(name = "warehouse_distance")
 public class WarehouseDistance {
 
     @Id

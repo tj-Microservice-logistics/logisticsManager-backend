@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/object_management
+    url: jdbc:mysql://localhost:3306/storagedb?serverTimezone=UTC
     username: root
-    password: password
+    password: zztxjy620
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -21,3 +21,5 @@ spring:
       config:
         server-addr: localhost:8848
         file-extension: yml
+server:
+  address: 0.0.0.0
