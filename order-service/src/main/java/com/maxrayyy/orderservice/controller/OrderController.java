@@ -53,9 +53,13 @@ public class OrderController {
     }
 
     @PostMapping("/update-deliver-status")
-    public ResponseEntity<String> updateDeliverStatus(@RequestParam Long orderId) {
-        orderService.updateDeliverStatusByOrderId(orderId);
-        return ResponseEntity.ok("Deliver status updated for orderId: " + orderId);
+    public ResponseEntity<String> updateDeliverStatus(@RequestParam String orderNumber) {
+        Order order = orderService.getOrder(orderNumber);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        }
+        orderService.updateDeliverStatusByOrderId(order.getOrderId());
+        return ResponseEntity.ok("Deliver status updated for order number: " + orderNumber);
     }
 
     @PostMapping("/update-payment-completed")
