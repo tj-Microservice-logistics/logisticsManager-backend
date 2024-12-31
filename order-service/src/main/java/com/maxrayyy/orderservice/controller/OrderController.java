@@ -53,7 +53,7 @@ public class OrderController {
     }
 
     @PostMapping("/update-deliver-status")
-    public ResponseEntity<String> updateDeliverStatus(@RequestParam String orderNumber) {
+    public ResponseEntity<String> updateDeliverStatus(@RequestParam("OrderNumber") String orderNumber) {
         Order order = orderService.getOrder(orderNumber);
         if (order == null) {
             return ResponseEntity.notFound().build();
