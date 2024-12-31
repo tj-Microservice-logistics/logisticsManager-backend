@@ -62,39 +62,10 @@ public class OrderService {
     }
 
     @Transactional
-    public List<Order> getAndProcessOrdersWithDeliverStatusZero() {
-        List<Order> orders = orderRepository.findByDeliverStatus(0);
-        for (Order order : orders) {
-            order.setDeliverStatus(1);
-            orderRepository.save(order);
-        }
-        return orders;
-    }
-
-    @Transactional
-    public void updateDeliverStatusByGoodsId(Long goodsId) {
-        List<Order> orders = orderRepository.findByGoodsId(goodsId);
-        for (Order order : orders) {
-            order.setDeliverStatus(2);
-            order.setFinishDate(LocalDate.now());
-            orderRepository.save(order);
-        }
-    }
-
-    @Transactional
     public void updatePaymentCompletedByOrderId(Long orderId) {
         Order order = orderRepository.findById(orderId).orElse(null);
         if (order != null) {
             order.setPaymentCompleted(true);
-            orderRepository.save(order);
-        }
-    }
-
-    @Transactional
-    public void updatePriceByOrderId(Long orderId, double newPrice) {
-        Order order = orderRepository.findById(orderId).orElse(null);
-        if (order != null) {
-            order.setPrice(newPrice);
             orderRepository.save(order);
         }
     }
@@ -116,7 +87,13 @@ public class OrderService {
         }).collect(Collectors.toList());
     }
 
+    @Transactional
     public void updateDeliverStatusByOrderId(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.setDeliverStatus(order.getDeliverStatus() + 1);
+            orderRepository.save(order);
+        }
     }
 
     public List<OrderWithGoodsDTO> getOrdersByTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
