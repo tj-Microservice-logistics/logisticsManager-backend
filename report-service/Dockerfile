@@ -13,5 +13,5 @@ ADD target/report-service-0.0.1-SNAPSHOT.jar .
 EXPOSE 9084
 
 # 启动命令 (设置较小的内存限制)
-ENTRYPOINT ["java", "-Xmx256m", "-Xms128m", "-jar", "report-service-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-jar", "report-service-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
 

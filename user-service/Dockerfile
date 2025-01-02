@@ -10,5 +10,5 @@ ADD target/user-service-0.0.1-SNAPSHOT.jar .
 EXPOSE 9083
 
 # 启动命令 (设置较小的内存限制)
-ENTRYPOINT ["java", "-Xmx256m", "-Xms128m", "-jar", "user-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "user-service-0.0.1-SNAPSHOT.jar"]
 

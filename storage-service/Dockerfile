@@ -1,4 +1,3 @@
-# 运行阶段
 FROM openjdk:17
 
 WORKDIR /app
@@ -10,5 +9,5 @@ ADD target/storage-service-0.0.1-SNAPSHOT.jar .
 EXPOSE 9081
 
 # 启动命令 (设置较小的内存限制)
-ENTRYPOINT ["java", "-Xmx256m", "-Xms128m", "-jar", "storage-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "storage-service-0.0.1-SNAPSHOT.jar"]
 

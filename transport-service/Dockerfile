@@ -10,5 +10,5 @@ ADD target/transport-service-0.0.1-SNAPSHOT.jar .
 EXPOSE 9082
 
 # 启动命令 (设置较小的内存限制)
-ENTRYPOINT ["java", "-Xmx256m", "-Xms128m", "-jar", "transport-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "transport-service-0.0.1-SNAPSHOT.jar"]
 

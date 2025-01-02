@@ -1,2 +1,0 @@
-net start MySQL80
-startup.cmd -m standalone
