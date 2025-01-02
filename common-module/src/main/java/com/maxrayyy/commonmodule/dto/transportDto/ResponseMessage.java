@@ -12,6 +12,8 @@ public class ResponseMessage<T> {
     private String message;
     private T data;
 
+    public ResponseMessage() {}
+
     public ResponseMessage(Integer code, String message, T data) {
         this.code = code;
         this.message = message;

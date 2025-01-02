@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/order")
 @RefreshScope
@@ -65,7 +66,7 @@ public class OrderController {
     @PostMapping("/update-payment-completed")
     public ResponseEntity<String> updatePaymentCompleted(@RequestParam Long orderId) {
         orderService.updatePaymentCompletedByOrderId(orderId);
-        return ResponseEntity.ok("Payment completed status updated for orderId: " + orderId);
+        return ResponseEntity.ok("Payment completed status updated for orderNumber: " + orderId);
     }
 
     @GetMapping("/list")

@@ -21,8 +21,8 @@ public class Waybill {
     @JoinColumn(name = "route_id", referencedColumnName = "route_id")
     private Route route;
 
-    @Column(name = "order_id")
-    private Integer orderId;
+    @Column(name = "order_number")
+    private String orderNumber;
 
     @Column(name = "vehicle_plate_number")
     private String vehiclePlateNumber;
@@ -31,7 +31,7 @@ public class Waybill {
     private String driverName;
 
     @Column(name = "transport_status")
-    private String transportStatus = "待发车";
+    private String transportStatus = "待发车"; // 运输中、已到达
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -55,7 +55,7 @@ public class Waybill {
         return "Waybill{" +
                 "waybillId=" + waybillId +
                 ", route=" + route +
-                ", orderId=" + orderId +
+                ", orderNumber=" + orderNumber +
                 ", vehiclePlateNumber='" + vehiclePlateNumber + '\'' +
                 ", driverName='" + driverName + '\'' +
                 ", transportStatus='" + transportStatus + '\'' +

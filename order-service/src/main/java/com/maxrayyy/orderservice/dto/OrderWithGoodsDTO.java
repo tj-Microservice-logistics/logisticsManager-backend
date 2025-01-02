@@ -12,7 +12,7 @@ public class OrderWithGoodsDTO {
     private LocalDate finishDate;
     private String originPlace;
     private String destinationPlace;
-    private Double price;
+    private Integer price;
     private Boolean paymentCompleted;
     private int deliverStatus;
     private Goods goods;

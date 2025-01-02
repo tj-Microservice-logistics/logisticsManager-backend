@@ -23,8 +23,8 @@ public class Route {
     @JoinColumn(name = "end_warehouse", referencedColumnName = "warehouse_id")
     private Warehouse endWarehouse;
 
-    @Column(name = "order_id")
-    private Integer orderId;
+    @Column(name = "order_number")
+    private String orderNumber;
 
     @Column(name = "total_cost")
     private Integer totalCost;
@@ -38,7 +38,7 @@ public class Route {
                 "routeId=" + routeId +
                 ", startWarehouse=" + startWarehouse +
                 ", endWarehouse=" + endWarehouse +
-                ", orderId=" + orderId +
+                ", orderNumber=" + orderNumber +
                 ", totalCost=" + totalCost +
                 ", cargoWeight=" + cargoWeight +
                 '}';

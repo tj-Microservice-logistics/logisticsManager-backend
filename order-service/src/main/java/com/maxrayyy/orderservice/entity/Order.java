@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId; // 使用 orderId 作为主键
+    private Long orderId; // 使用 orderNumber 作为主键
 
     private Long goodsId; // Goods_ID
     private String orderNumber; // 订单编号
@@ -21,7 +21,7 @@ public class Order {
 
     private String originPlace; // 起始地址
     private String destinationPlace; // 终点地址
-    private Double price; // 价格
+    private Integer price; // 价格
     private Boolean paymentCompleted; // 是否完成支付
 
     private int deliverStatus; // 运输状态

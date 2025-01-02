@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WaybillService implements IWaybillService {
@@ -38,6 +39,7 @@ public class WaybillService implements IWaybillService {
     public void generateWaybills(List<Integer> routeWarehouseIds, Route route) {
 
         int totalCost = 0;
+        System.out.println("开始生成 Waybill，routeWarehouseIds size: " + routeWarehouseIds.size());
 
         for (int i = 0; i < routeWarehouseIds.size() - 1; i++) {
             Waybill waybill = new Waybill();
@@ -61,6 +63,7 @@ public class WaybillService implements IWaybillService {
             totalCost += distance.getCost();
 
             waybill.setRoute(route);
+            waybill.setOrderNumber(route.getOrderNumber());
             waybill.setCargoWeight(route.getCargoWeight());
 
             // 获取当前时间
@@ -71,7 +74,11 @@ public class WaybillService implements IWaybillService {
 
             waybill.setCreatedAt(timestamp);
 
+
+            System.out.println("准备保存 Waybill: " + waybill);
+
             waybillRepository.save(waybill);
+
         }
 
         route.setTotalCost(totalCost);
@@ -89,8 +96,8 @@ public class WaybillService implements IWaybillService {
             WaybillDto waybillDto = new WaybillDto();
             BeanUtils.copyProperties(waybill, waybillDto);
             waybillDto.setRouteId(waybill.getRoute().getRouteId());
-            waybillDto.setStartWarehouseId(waybill.getStart().getWarehouseId());
-            waybillDto.setEndWarehouseId(waybill.getEnd().getWarehouseId());
+            waybillDto.setStartWarehouseName(waybill.getStart().getWarehouseName());
+            waybillDto.setEndWarehouseName(waybill.getEnd().getWarehouseName());
             waybillDtoList.add(waybillDto);
         }
 
@@ -107,15 +114,36 @@ public class WaybillService implements IWaybillService {
 
         List<WaybillDto> routeWaybillDtoList = new ArrayList<>();
         for (Waybill waybill : routeWaybills) {
-            WaybillDto waybillDto = new WaybillDto();
-            BeanUtils.copyProperties(waybill, waybillDto);
-            waybillDto.setRouteId(waybill.getRoute().getRouteId());
-            waybillDto.setStartWarehouseId(waybill.getStart().getWarehouseId());
-            waybillDto.setEndWarehouseId(waybill.getEnd().getWarehouseId());
-            routeWaybillDtoList.add(waybillDto);
+            if(Objects.equals(waybill.getTransportStatus(), "待发车")) {
+                WaybillDto waybillDto = new WaybillDto();
+                BeanUtils.copyProperties(waybill, waybillDto);
+                waybillDto.setRouteId(waybill.getRoute().getRouteId());
+                waybillDto.setStartWarehouseName(waybill.getStart().getWarehouseName());
+                waybillDto.setEndWarehouseName(waybill.getEnd().getWarehouseName());
+                routeWaybillDtoList.add(waybillDto);
+            }
         }
 
         return routeWaybillDtoList;
+    }
+
+    @Override
+    public List<WaybillDto> getVehicleWaybills(String vehiclePlateNumber) {
+        Iterable<Waybill> vehicleWaybills = waybillRepository.findByVehiclePlateNumber(vehiclePlateNumber);
+
+        List<WaybillDto> vehicleWaybillDtoList = new ArrayList<>();
+        for (Waybill waybill : vehicleWaybills) {
+            if(Objects.equals(waybill.getTransportStatus(), "运输中")) {
+                WaybillDto waybillDto = new WaybillDto();
+                BeanUtils.copyProperties(waybill, waybillDto);
+                waybillDto.setRouteId(waybill.getRoute().getRouteId());
+                waybillDto.setStartWarehouseName(waybill.getStart().getWarehouseName());
+                waybillDto.setEndWarehouseName(waybill.getEnd().getWarehouseName());
+                vehicleWaybillDtoList.add(waybillDto);
+            }
+        }
+
+        return vehicleWaybillDtoList;
     }
 
     @Override
@@ -124,7 +152,7 @@ public class WaybillService implements IWaybillService {
 
         Waybill updatedWaybill = waybillRepository.findById(waybillId).orElseThrow(() -> new IllegalArgumentException("待更新订单不存在！"));
 
-        BeanUtils.copyProperties(waybillDto, updatedWaybill, "waybillId", "createdAt", "orderId", "cargoWeight");
+        BeanUtils.copyProperties(waybillDto, updatedWaybill, "waybillId", "createdAt", "orderNumber", "cargoWeight");
 
         // 获取当前时间
         LocalDateTime now = LocalDateTime.now();
@@ -140,8 +168,8 @@ public class WaybillService implements IWaybillService {
         WaybillDto updatedWaybillDto = new WaybillDto();
         BeanUtils.copyProperties(updatedWaybill, updatedWaybillDto);
         updatedWaybillDto.setRouteId(updatedWaybill.getRoute().getRouteId());
-        updatedWaybillDto.setStartWarehouseId(updatedWaybill.getStart().getWarehouseId());
-        updatedWaybillDto.setEndWarehouseId(updatedWaybill.getEnd().getWarehouseId());
+        updatedWaybillDto.setStartWarehouseName(updatedWaybill.getStart().getWarehouseName());
+        updatedWaybillDto.setEndWarehouseName(updatedWaybill.getEnd().getWarehouseName());
 
         return updatedWaybillDto;
     }

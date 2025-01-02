@@ -9,9 +9,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 100.80.148.238:8848
+        server-addr: localhost:8848
       config:
-        server-addr: 100.80.148.238:8848
+        server-addr: localhost:8848
         file-extension: yml
 
   datasource:
@@ -29,3 +29,6 @@ spring:
         format_sql: true
         use_sql_comments: true
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+server:
+  address: 0.0.0.0

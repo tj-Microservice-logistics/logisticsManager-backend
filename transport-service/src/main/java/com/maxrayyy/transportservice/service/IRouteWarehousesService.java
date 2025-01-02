@@ -9,9 +9,9 @@ public interface IRouteWarehousesService {
     // 新增路径仓库
     RouteWarehousesDto add(RouteWarehousesDto routeWarehousesDto);
 
-    // 查询一个路径上的全部仓库
-    List<RouteWarehousesDto> get(Integer routeId);
+    // 查询一个订单的全部仓库
+    List<RouteWarehousesDto> get(String orderNumber);
 
     // 更新仓库的到达状态
-    List<RouteWarehousesDto> updateArrival(Integer warehouseId);
+    List<RouteWarehousesDto> updateArrival(String vehiclePlateNumber);
 }

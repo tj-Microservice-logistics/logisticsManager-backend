@@ -10,6 +10,7 @@ import com.maxrayyy.transportservice.repository.RouteWarehousesRepository;
 import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
 import com.maxrayyy.transportservice.repository.WarehouseRepository;
 import com.maxrayyy.commonmodule.dto.transportDto.RouteDto;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,21 +35,23 @@ public class RouteService implements IRouteService {
     @Autowired
     private WaybillService waybillService;
 
+    @Transactional
     @Override
     public RouteDto add(RouteDto routeDto) {
 
+        Warehouse startWarehouse = warehouseRepository.findByWarehouseName(routeDto.getStartWarehouseName())
+                .orElseThrow(() -> new IllegalArgumentException("无法找到起点仓库！"));
+        Warehouse endWarehouse = warehouseRepository.findByWarehouseName(routeDto.getEndWarehouseName())
+                .orElseThrow(() -> new IllegalArgumentException("无法找到终点仓库！"));
+
         // step1：找到最短路径
-        List<Integer> shortestRoute = findShortestRoute(routeDto.getStartWarehouseId(), routeDto.getEndWarehouseId());
+        List<Integer> shortestRoute = findShortestRoute(startWarehouse.getWarehouseId(), endWarehouse.getWarehouseId());
 
         // step2：创建 Route 对象
         Route route = new Route();
 
-        Warehouse startWarehouse = warehouseRepository.findById(routeDto.getStartWarehouseId())
-                .orElseThrow(() -> new IllegalArgumentException("无法找到起点仓库！"));
-        Warehouse endWarehouse = warehouseRepository.findById(routeDto.getEndWarehouseId())
-                .orElseThrow(() -> new IllegalArgumentException("无法找到终点仓库！"));
-
         BeanUtils.copyProperties(routeDto, route);
+
         route.setStartWarehouse(startWarehouse);
         route.setEndWarehouse(endWarehouse);
 
@@ -63,8 +66,8 @@ public class RouteService implements IRouteService {
         // step5：返回 RouteDto
         RouteDto resultDto = new RouteDto();
         BeanUtils.copyProperties(route, resultDto);
-        resultDto.setStartWarehouseId(startWarehouse.getWarehouseId());
-        resultDto.setEndWarehouseId(endWarehouse.getWarehouseId());
+        resultDto.setStartWarehouseName(startWarehouse.getWarehouseName());
+        resultDto.setEndWarehouseName(endWarehouse.getWarehouseName());
 
         return resultDto;
 

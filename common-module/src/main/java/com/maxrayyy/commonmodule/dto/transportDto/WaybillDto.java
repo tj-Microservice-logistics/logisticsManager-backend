@@ -9,14 +9,14 @@ public class WaybillDto {
 
     private Integer waybillId;
     private Integer routeId;
-    private Integer orderId;
+    private String orderNumber;
     private String vehiclePlateNumber;
     private String driverName;
     private String transportStatus;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private Integer startWarehouseId;
-    private Integer endWarehouseId;
+    private String startWarehouseName;
+    private String endWarehouseName;
     private Double cargoWeight;
 
 }

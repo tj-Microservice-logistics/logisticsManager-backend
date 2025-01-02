@@ -1,5 +1,6 @@
 package com.maxrayyy.transportservice.repository;
 
+import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.RouteWarehouses;
 import com.maxrayyy.transportservice.entity.Warehouse;
 import org.springframework.data.repository.CrudRepository;
@@ -13,4 +14,6 @@ public interface RouteWarehousesRepository extends CrudRepository<RouteWarehouse
     Iterable<RouteWarehouses> findByRouteRouteId(Integer routeId);
 
     List<RouteWarehouses> findByWarehouse(Warehouse warehouse);
+
+    RouteWarehouses findByWarehouseAndRoute(Warehouse warehouse, Route route);
 }
