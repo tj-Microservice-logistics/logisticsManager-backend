@@ -79,7 +79,7 @@ public class OrderController {
     public ResponseEntity<List<OrderWithGoodsDTO>> getOrdersByTimeRange(
             @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
-        List<OrderWithGoodsDTO> orders = orderService.getOrdersByTimeRange(startTime, endTime);
-        return ResponseEntity.ok(orders);
+        // List<OrderWithGoodsDTO> orders = orderService.getOrdersByTimeRange(startTime, endTime);
+        return null;
     }
 }

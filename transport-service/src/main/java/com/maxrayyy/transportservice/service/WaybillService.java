@@ -5,6 +5,7 @@ import com.maxrayyy.transportservice.entity.Route;
 import com.maxrayyy.transportservice.entity.Warehouse;
 import com.maxrayyy.transportservice.entity.WarehouseDistance;
 import com.maxrayyy.transportservice.entity.Waybill;
+import com.maxrayyy.transportservice.feignClient.OrderServiceClient;
 import com.maxrayyy.transportservice.repository.RouteRepository;
 import com.maxrayyy.transportservice.repository.WarehouseDistanceRepository;
 import com.maxrayyy.transportservice.repository.WarehouseRepository;
@@ -34,6 +35,9 @@ public class WaybillService implements IWaybillService {
 
     @Autowired
     RouteRepository routeRepository;
+
+    @Autowired
+    OrderServiceClient orderServiceClient;
 
     @Override
     public void generateWaybills(List<Integer> routeWarehouseIds, Route route) {
@@ -170,6 +174,10 @@ public class WaybillService implements IWaybillService {
         updatedWaybillDto.setRouteId(updatedWaybill.getRoute().getRouteId());
         updatedWaybillDto.setStartWarehouseName(updatedWaybill.getStart().getWarehouseName());
         updatedWaybillDto.setEndWarehouseName(updatedWaybill.getEnd().getWarehouseName());
+
+        if (updatedWaybill.getStart() == updatedWaybill.getRoute().getStartWarehouse()) {
+            orderServiceClient.updateDeliverStatus(updatedWaybillDto.getOrderNumber());
+        }
 
         return updatedWaybillDto;
     }

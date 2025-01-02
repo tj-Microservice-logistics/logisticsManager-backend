@@ -75,7 +75,6 @@ public class RouteWarehousesService implements IRouteWarehousesService {
                 // 如果是终点仓库，结束订单
                 if (routeWarehouses.getWarehouse() == routeWarehouses.getRoute().getEndWarehouse()) {
                     orderServiceClient.updateDeliverStatus(routeWarehouses.getRoute().getOrderNumber());
-
                 }
 
                 RouteWarehousesDto routeWarehousesDto = new RouteWarehousesDto();

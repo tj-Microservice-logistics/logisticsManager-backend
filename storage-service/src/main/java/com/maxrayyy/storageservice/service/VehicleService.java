@@ -114,7 +114,6 @@ public class VehicleService {
 
         for (WaybillDto waybillDto : waybillDtos) {
             transportServiceClient.updateWaybill(waybillDto.getWaybillId(), newWaybillDto);
-            orderServiceClient.updateDeliverStatus(waybillDto.getOrderNumber());
         }
 
         return vehicleAndDriver;

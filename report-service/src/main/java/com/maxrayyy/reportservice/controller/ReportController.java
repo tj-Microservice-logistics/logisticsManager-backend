@@ -19,6 +19,7 @@ import java.util.zip.DataFormatException;
 
 @RestController
 @RequestMapping("report/statistics")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class ReportController {

@@ -3,8 +3,9 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/mysql-init/create_db_table.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/mysql-init/order.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/mysql-init/script.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/mysql-init/reportData.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/mysql-init/storage.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/mysql-init/transport.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/mysql-init/user.sql" dialect="MySQL" />
   </component>
 </project>

@@ -1,6 +1,6 @@
 package com.maxrayyy.reportservice.service.impl;
 
-import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
+import com.maxrayyy.commonmodule.dto.orderDto.ObtainedOrderDto;
 import com.maxrayyy.reportservice.feign.OrderServiceClient;
 import com.maxrayyy.reportservice.model.entity.OrderRawData;
 import com.maxrayyy.reportservice.repository.OrderRawDataRepository;

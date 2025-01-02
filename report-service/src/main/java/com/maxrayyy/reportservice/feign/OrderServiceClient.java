@@ -1,6 +1,6 @@
 package com.maxrayyy.reportservice.feign;
 
-import com.maxrayyy.commonmodule.dto.ObtainedOrderDto;
+import com.maxrayyy.commonmodule.dto.orderDto.ObtainedOrderDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
